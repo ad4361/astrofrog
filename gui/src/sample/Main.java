@@ -1,5 +1,6 @@
 package sample;
 
+import sample.Model;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -12,6 +13,7 @@ import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
+import java.util.Objects;
 
 public class Main extends Application {
 
@@ -24,8 +26,8 @@ public class Main extends Application {
         Pane pane = new Pane();
         Scene scene = new Scene(pane, 500, 400);
 
-        String query = "select * from \"User\" limit 20";
-        ResultSet rs = PostgresSSH.executeSelect(query);
+        String query = "select * from \"User\" limit 1";
+        ResultSet rs = sample.PostgresSSH.executeSelect(query);
         ResultSetMetaData rsMetaData = rs.getMetaData();
 
         int count = rsMetaData.getColumnCount();
@@ -56,10 +58,14 @@ public class Main extends Application {
 
         Parent root = FXMLLoader.load(getClass().getResource("Welcome.fxml"));
         stage.setTitle("RibBit :: AstroFrog");
-        //stage.setScene(tempScene());
+
         Scene scene = new Scene(root);
         stage.setScene(scene);
+
+        //stage.setScene(tempScene());
+
         stage.show();
+
     }
 
 

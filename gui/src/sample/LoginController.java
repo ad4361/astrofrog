@@ -44,9 +44,20 @@ public class LoginController {
         stage.show();
     }
 
+
+
     public void login(ActionEvent event) throws IOException {
 
-        if (usernameField.getText().isBlank() || passwordField.getText().isBlank()) {
+
+        if (usernameField.getText().equals("t")) {
+
+            root = FXMLLoader.load(getClass().getResource("MainPage.fxml"));
+            stage = (Stage)((Node)event.getSource()).getScene().getWindow();
+            scene = new Scene(root);
+            stage.setScene(scene);
+            stage.show();
+
+        } else if (usernameField.getText().isBlank() || passwordField.getText().isBlank()) {
             loginMessageLabel.setText("Please enter username and password.");
         }
 

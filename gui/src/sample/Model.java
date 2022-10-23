@@ -11,7 +11,7 @@ public class Model {
 
 
     public void login(String username, String password) throws SQLException {
-        Connection conn = PostgresSSH.getConnection();
+        Connection conn = sample.PostgresSSH.getConnection();
         String query = "select * from \"User\" where username = '"+ username + "'";
 
     }
