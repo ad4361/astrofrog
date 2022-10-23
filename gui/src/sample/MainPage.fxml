@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-
-<?import com.gluonhq.charm.glisten.control.TextField?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-
-<?import javafx.scene.control.TextField?>
-<AnchorPane prefHeight="431.0" prefWidth="680.0" fx:controller="sample.MainPageController" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane prefHeight="431.0" prefWidth="680.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.MainPageController">
    <children>
       <Button layoutX="19.0" layoutY="167.0" mnemonicParsing="false" prefHeight="37.0" prefWidth="69.0" text="Playlists" />
 
@@ -19,13 +19,30 @@
          </font>
       </Label>
 
-      <TextField layoutX="430.0" layoutY="7.0" prefHeight="30.0" prefWidth="236.0" />
-      <Label layoutX="307.0" layoutY="3.0" prefHeight="37.0" prefWidth="108.0" text="Song Search">
+      <TextField layoutX="340.0" layoutY="9.0" prefHeight="30.0" prefWidth="236.0" />
+      <Label layoutX="215.0" layoutY="6.0" prefHeight="37.0" prefWidth="108.0" text="Search">
          <font>
             <Font size="18.0" />
          </font>
       </Label>
       <Button layoutX="19.0" layoutY="340.0" mnemonicParsing="false" prefHeight="37.0" prefWidth="69.0" text="Logout" />
       <Button layoutX="19.0" layoutY="102.0" mnemonicParsing="false" prefHeight="37.0" prefWidth="69.0" text="Friends" />
+      <TableView layoutX="101.0" layoutY="97.0" prefHeight="294.0" prefWidth="538.0">
+        <columns>
+          <TableColumn prefWidth="54.39996337890625" text="Song" />
+          <TableColumn prefWidth="61.5999755859375" text="Artist" />
+            <TableColumn prefWidth="53.60003662109375" text="Length" />
+            <TableColumn prefWidth="86.39996337890625" text="Release Date" />
+            <TableColumn prefWidth="64.00006103515625" text="Album" />
+            <TableColumn minWidth="1.5999755859375" prefWidth="57.5999755859375" text="Track #" />
+            <TableColumn prefWidth="62.39996337890625" text="Genre" />
+            <TableColumn prefWidth="95.99997558593748" text="Play?" />
+        </columns>
+      </TableView>
+      <Button layoutX="596.0" layoutY="6.0" mnemonicParsing="false" prefHeight="37.0" prefWidth="69.0" text="Search" />
+      <CheckBox layoutX="342.0" layoutY="51.0" mnemonicParsing="false" text="Song" />
+      <CheckBox layoutX="407.0" layoutY="51.0" mnemonicParsing="false" text="Artist" />
+      <CheckBox layoutX="481.0" layoutY="51.0" mnemonicParsing="false" text="Album" />
+      <CheckBox layoutX="551.0" layoutY="51.0" mnemonicParsing="false" text="Genre" />
    </children>
 </AnchorPane>
