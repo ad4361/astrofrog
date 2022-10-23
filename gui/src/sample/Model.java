@@ -1,5 +1,8 @@
 package sample;
 
+import java.sql.Connection;
+import java.sql.SQLException;
+
 public class Model {
 
     public Model() {
@@ -7,8 +10,10 @@ public class Model {
     }
 
 
-    public void login() {
-        //TODO
+    public void login(String username, String password) throws SQLException {
+        Connection conn = PostgresSSH.getConnection();
+        String query = "select * from \"User\" where username = '"+ username + "'";
+
     }
 
     public void signup() {

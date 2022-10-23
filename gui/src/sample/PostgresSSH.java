@@ -7,21 +7,6 @@ import java.util.Properties;
 
 public class PostgresSSH {
 
-    /*private static Connection getConnection() throws SQLException {
-
-        Connection conn = null;
-        Properties connectionProps = new Properties();
-        connectionProps.put("user", Credentials.username);
-        connectionProps.put("password", Credentials.password);
-
-        conn = DriverManager.getConnection("jdbc:postgresql://localhost:5432/p32001_20",
-                connectionProps);
-
-        System.out.println("Connected to database");
-        return conn;
-    }*/
-
-
     public static Connection getConnection() throws SQLException {
 
         int lport = 5432;
@@ -81,6 +66,7 @@ public class PostgresSSH {
         assert conn != null;
         Statement statement = conn.createStatement();
         ResultSet rs = statement.executeQuery(query);
+        conn.close();
 
         return rs;
     }
