@@ -7,7 +7,9 @@ import java.util.Properties;
 
 public class PostgresSSH {
 
-    public static Connection getConnection() throws SQLException {
+    public static Connection connection;
+
+    public static void startConnection() throws SQLException {
 
         int lport = 5432;
         String rhost = "starbug.cs.rit.edu";
@@ -45,13 +47,12 @@ public class PostgresSSH {
             System.out.println("Database connection established");
 
             // Do something with the database....
-            return conn;
+            connection = conn;
             //conn.close();
 
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return null;
     }
 
     /**
@@ -62,13 +63,9 @@ public class PostgresSSH {
      */
     public static ResultSet executeSelect(String query) throws SQLException {
 
-        Connection conn = getConnection();
-        assert conn != null;
-        Statement statement = conn.createStatement();
-        ResultSet rs = statement.executeQuery(query);
-        conn.close();
+        Statement statement = connection.createStatement();
+        return statement.executeQuery(query);
 
-        return rs;
     }
 
 

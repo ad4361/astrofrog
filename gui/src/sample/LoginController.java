@@ -13,6 +13,8 @@ import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 public class LoginController {
 
@@ -31,36 +33,46 @@ public class LoginController {
     @FXML
     private Label loginMessageLabel;
 
-    private void validateLogin() {
-
-    }
-
-
     public void switchToWelcomeScene(ActionEvent event) throws IOException {
         root = FXMLLoader.load(getClass().getResource("Welcome.fxml"));
-        stage = (Stage)((Node)event.getSource()).getScene().getWindow();
+        stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         scene = new Scene(root);
         stage.setScene(scene);
         stage.show();
     }
 
-
-
-    public void login(ActionEvent event) throws IOException {
-
-
-        if (usernameField.getText().equals("t")) {
-
-            root = FXMLLoader.load(getClass().getResource("MainPage.fxml"));
-            stage = (Stage)((Node)event.getSource()).getScene().getWindow();
-            scene = new Scene(root);
-            stage.setScene(scene);
-            stage.show();
-
-        } else if (usernameField.getText().isBlank() || passwordField.getText().isBlank()) {
-            loginMessageLabel.setText("Please enter username and password.");
-        }
-
+    public void switchToMainPageScene(ActionEvent event) throws IOException {
+        root = FXMLLoader.load(getClass().getResource("MainPage.fxml"));
+        stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        scene = new Scene(root);
+        stage.setScene(scene);
+        stage.show();
     }
 
+    public void login(ActionEvent event) throws IOException, SQLException {
+
+        if (usernameField.getText().isBlank() || passwordField.getText().isBlank()) {
+            loginMessageLabel.setText("Please enter username and password.");
+        } else {
+
+            try {
+                String query = "SELECT count(1) FROM \"User\" WHERE username = '" + usernameField.getText() + "' AND password = '" + passwordField.getText() + "'";
+                ResultSet rs = PostgresSSH.executeSelect(query);
+
+                if (rs != null) {
+                    while (rs.next()) {
+                        if (rs.getInt(1) == 1) {
+                            loginMessageLabel.setText("Welcome!");
+                            switchToMainPageScene(event);
+                        } else {
+                            loginMessageLabel.setText("Invalid credentials. Try again.");
+                        }
+                    }
+                }
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
 }
