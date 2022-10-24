@@ -3,6 +3,7 @@ package sample;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -18,6 +19,7 @@ import java.security.MessageDigest;
 import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.time.LocalDateTime;
 
 public class LoginController {
@@ -71,7 +73,12 @@ public class LoginController {
             }
 
             // need to update lastAccessDate in db
-
+            Statement st = PostgresSSH.connection.createStatement();
+            String updateAccess = "UPDATE \"User\" SET LASTACCESSDATE = '" +lastAccessDate+ "' WHERE username = '" + username + "'";
+            int newTime = st.executeUpdate(updateAccess);
+            if (newTime < 1) {
+                System.out.println("Did not work, check the statement or if the user exists!");
+            }
             return new User(uname, firstname, lastname, email, dob, creationDate, lastAccessDate);
 
         } catch (Exception e) {
@@ -100,13 +107,11 @@ public class LoginController {
                     while (test.next()) {
                         if (test.getString("salt") != null) {
                             String toHash = passwordField.getText() + test.getString("salt");
-                            System.out.println(toHash);
                             MessageDigest md = MessageDigest.getInstance("MD5");
                             md.update(toHash.getBytes());
                             BigInteger hash = new BigInteger(1, md.digest());
                             String check = hash.toString(16);
                             if (check.equals(test.getString(3))) {
-                                System.out.println(test.getString(3));
                                 User self = createSelf(usernameField.getText());
                                 Model.setSelf(self);
                                 switchToMainPageScene(event);
