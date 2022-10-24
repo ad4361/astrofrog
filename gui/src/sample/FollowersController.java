@@ -50,28 +50,6 @@ public class FollowersController implements Initializable {
         stage.show();
     }
 
-    public void searchMyFollowers(ActionEvent event) {
-
-        try {
-            String query = "SELECT username, email FROM \"User\" WHERE email LIKE '%" +
-                    searchField.getText() + "%'";
-            ResultSet rs = PostgresSSH.executeSelect(query);
-
-            while (rs.next()) {
-                String username = rs.getString("username");
-                String email = rs.getString("email");
-                User follower = new User(username, email);
-                followersList.addAll(follower);
-            }
-
-            usernameColumn.setCellValueFactory(new PropertyValueFactory<User, String>(""));
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
 

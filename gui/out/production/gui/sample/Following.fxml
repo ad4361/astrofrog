@@ -16,18 +16,17 @@
             </font>
         </Label>
         <Button fx:id="goBackButton" layoutX="14.0" layoutY="376.0" mnemonicParsing="false" onAction="#switchToMainPageScene" prefHeight="37.0" prefWidth="69.0" text="Go back" />
-        <Label layoutX="263.0" layoutY="32.0" prefHeight="38.0" prefWidth="151.0" text="Search for user:">
+        <Label layoutX="263.0" layoutY="28.0" prefHeight="38.0" prefWidth="151.0" text="Search for user:">
             <font>
                 <Font size="17.0" />
             </font>
         </Label>
-        <TextField fx:id="searchField" layoutX="385.0" layoutY="37.0" prefHeight="28.0" prefWidth="193.0" promptText="Enter email..." />
-        <TableView fx:id="followingTable" layoutX="76.0" layoutY="101.0" prefHeight="257.0" prefWidth="511.0">
+        <TextField fx:id="searchField" layoutX="390.0" layoutY="33.0" prefHeight="28.0" prefWidth="275.0" promptText="Enter email..." />
+        <TableView fx:id="followingTable" layoutX="64.0" layoutY="101.0" prefHeight="257.0" prefWidth="549.0">
             <columns>
-                <TableColumn prefWidth="75.0" text="Username" />
-                <TableColumn prefWidth="75.0" text="Unfollow" />
+                <TableColumn fx:id="usernameColumn" prefWidth="133.33333587646484" text="Username" />
+                <TableColumn fx:id="emailColumn" prefWidth="230.66664123535156" text="Email" />
             </columns>
         </TableView>
-        <Button fx:id="searchButton" layoutX="596.0" layoutY="28.0" mnemonicParsing="false" prefHeight="37.0" prefWidth="69.0" text="Search" />
     </children>
 </AnchorPane>
