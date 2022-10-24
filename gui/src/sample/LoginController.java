@@ -13,6 +13,8 @@ import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.math.BigInteger;
+import java.security.MessageDigest;
 import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -89,20 +91,44 @@ public class LoginController {
                 String query = "SELECT count(1) FROM \"User\" WHERE username = '" +
                         usernameField.getText() + "' AND password = '" +
                         passwordField.getText() + "'";
-                ResultSet rs = PostgresSSH.executeSelect(query);
+                String anotherquery = "SELECT USERNAME, SALT, HASHEDPASS FROM \"User\" WHERE username = '" +
+                        usernameField.getText() + "'";
 
-                if (rs != null) {
-                    while (rs.next()) {
-                        if (rs.getInt(1) == 1) {
-                            loginMessageLabel.setText("Welcome!");
-                            User self = createSelf(usernameField.getText());
-                            Model.setSelf(self);
-                            switchToMainPageScene(event);
-                        } else {
-                            loginMessageLabel.setText("Invalid credentials. Try again.");
+//                ResultSet rs = PostgresSSH.executeSelect(query);
+                ResultSet test = PostgresSSH.executeSelect(anotherquery);
+                if (test != null) {
+                    while (test.next()) {
+                        if (test.getString("salt") != null) {
+                            String toHash = passwordField.getText() + test.getString("salt");
+                            System.out.println(toHash);
+                            MessageDigest md = MessageDigest.getInstance("MD5");
+                            md.update(toHash.getBytes());
+                            BigInteger hash = new BigInteger(1, md.digest());
+                            String check = hash.toString(16);
+                            if (check.equals(test.getString(3))) {
+                                System.out.println(test.getString(3));
+                                User self = createSelf(usernameField.getText());
+                                Model.setSelf(self);
+                                switchToMainPageScene(event);
+                            }
+                            else {
+                                loginMessageLabel.setText("Invalid credentials. Try again.");
+                            }
                         }
                     }
                 }
+ //               if (rs != null) {
+ //                   while (rs.next()) {
+//                        if (rs.getInt(1) == 1) {
+//                            loginMessageLabel.setText("Welcome!");
+//                            User self = createSelf(usernameField.getText());
+//                            Model.setSelf(self);
+ //                           switchToMainPageScene(event);
+ //                       } else {
+ //                           loginMessageLabel.setText("Invalid credentials. Try again.");
+ //                       }
+ //                   }
+//                }
 
             } catch (Exception e) {
                 e.printStackTrace();
