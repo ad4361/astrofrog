@@ -5,8 +5,14 @@ import java.sql.SQLException;
 
 public class Model {
 
+    public static User self;
+
     public Model() {
 
+    }
+
+    public static void setSelf(User user) {
+        self = user;
     }
 
 

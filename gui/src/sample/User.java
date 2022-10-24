@@ -5,25 +5,51 @@ import java.time.LocalDateTime;
 
 public class User {
 
-    public String username;
-    public String password;
-    public String firstname;
-    public String lastname;
-    public String email;
-    public Date dob;
-    public Date creationDate;
-    public LocalDateTime lastAccessDate;
+    private String username;
+    private String firstname;
+    private String lastname;
+    private String email;
+    private Date dob;
+    private Date creationDate;
+    private LocalDateTime lastAccessDate;
 
-    public User(String username, String password, String firstname, String lastname,
+    public User(String username, String firstname, String lastname,
                 String email, Date dob, Date creationDate, LocalDateTime lastAccessDate) {
         this.username = username;
-        this.password = password;
         this.firstname = firstname;
         this.lastname = lastname;
         this.email = email;
         this.dob = dob;
         this.creationDate = creationDate;
         this.lastAccessDate = lastAccessDate;
+    }
+
+    public String getUsername() {
+        return this.username;
+    }
+
+    public String getFirstname() {
+        return this.firstname;
+    }
+
+    public String getLastname() {
+        return this.lastname;
+    }
+
+    public String getEmail() {
+        return this.email;
+    }
+
+    public Date getDob() {
+        return this.dob;
+    }
+
+    public Date getCreationDate() {
+        return this.creationDate;
+    }
+
+    public LocalDateTime getLastAccessDate() {
+        return this.lastAccessDate;
     }
 
 }

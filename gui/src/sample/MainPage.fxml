@@ -11,22 +11,22 @@
 
 <AnchorPane prefHeight="431.0" prefWidth="680.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.MainPageController">
    <children>
-      <Button layoutX="19.0" layoutY="167.0" mnemonicParsing="false" prefHeight="37.0" prefWidth="69.0" text="Playlists" />
+      <Button fx:id="playlistsButton" layoutX="19.0" layoutY="167.0" mnemonicParsing="false" prefHeight="37.0" prefWidth="69.0" text="Playlists" />
 
-      <Label fx:id="welcomeText" layoutX="19.0" layoutY="14.0" prefHeight="22.0" prefWidth="266.0" text="Hi, BLANK!">
+      <Label fx:id="hiLabel" layoutX="8.0" layoutY="16.0" prefHeight="45.0" prefWidth="257.0">
          <font>
-            <Font size="30.0" />
+            <Font size="25.0" />
          </font>
       </Label>
 
-      <TextField layoutX="340.0" layoutY="9.0" prefHeight="30.0" prefWidth="236.0" />
-      <Label layoutX="215.0" layoutY="6.0" prefHeight="37.0" prefWidth="108.0" text="Search">
+      <TextField fx:id="searchField" layoutX="340.0" layoutY="9.0" prefHeight="30.0" prefWidth="236.0" />
+      <Label layoutX="273.0" layoutY="6.0" prefHeight="37.0" prefWidth="57.0" text="Search">
          <font>
             <Font size="18.0" />
          </font>
       </Label>
-      <Button layoutX="19.0" layoutY="340.0" mnemonicParsing="false" prefHeight="37.0" prefWidth="69.0" text="Logout" />
-      <Button layoutX="19.0" layoutY="102.0" mnemonicParsing="false" prefHeight="37.0" prefWidth="69.0" text="Friends" />
+      <Button fx:id="logoutButton" layoutX="19.0" layoutY="340.0" mnemonicParsing="false" prefHeight="37.0" prefWidth="69.0" text="Logout" />
+      <Button fx:id="friendsButton" layoutX="19.0" layoutY="102.0" mnemonicParsing="false" prefHeight="37.0" prefWidth="69.0" text="Friends" />
       <TableView layoutX="101.0" layoutY="97.0" prefHeight="294.0" prefWidth="538.0">
         <columns>
           <TableColumn prefWidth="54.39996337890625" text="Song" />
@@ -39,10 +39,10 @@
             <TableColumn prefWidth="95.99997558593748" text="Play?" />
         </columns>
       </TableView>
-      <Button layoutX="596.0" layoutY="6.0" mnemonicParsing="false" prefHeight="37.0" prefWidth="69.0" text="Search" />
-      <CheckBox layoutX="342.0" layoutY="51.0" mnemonicParsing="false" text="Song" />
-      <CheckBox layoutX="407.0" layoutY="51.0" mnemonicParsing="false" text="Artist" />
-      <CheckBox layoutX="481.0" layoutY="51.0" mnemonicParsing="false" text="Album" />
-      <CheckBox layoutX="551.0" layoutY="51.0" mnemonicParsing="false" text="Genre" />
+      <Button fx:id="searchButton" layoutX="596.0" layoutY="6.0" mnemonicParsing="false" prefHeight="37.0" prefWidth="69.0" text="Search" />
+      <CheckBox fx:id="songCheckBox" layoutX="342.0" layoutY="51.0" mnemonicParsing="false" text="Song" />
+      <CheckBox fx:id="artistCheckBox" layoutX="407.0" layoutY="51.0" mnemonicParsing="false" text="Artist" />
+      <CheckBox fx:id="albumCheckBox" layoutX="481.0" layoutY="51.0" mnemonicParsing="false" text="Album" />
+      <CheckBox fx:id="genreCheckBox" layoutX="551.0" layoutY="51.0" mnemonicParsing="false" text="Genre" />
    </children>
 </AnchorPane>

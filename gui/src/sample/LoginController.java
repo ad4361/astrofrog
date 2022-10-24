@@ -13,8 +13,10 @@ import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDateTime;
 
 public class LoginController {
 
@@ -49,6 +51,31 @@ public class LoginController {
         stage.show();
     }
 
+    public User createSelf(String username) {
+        String query = "SELECT * FROM \"User\" WHERE username = '" + username + "'";
+        try {
+            ResultSet rs = PostgresSSH.executeSelect(query);
+            String uname = null, firstname = null, lastname = null, email = null;
+            Date dob = null, creationDate = null;
+            LocalDateTime lastAccessDate = null;
+            while (rs.next()) {
+                uname = rs.getString("username");
+                firstname = rs.getString("firstname");
+                lastname = rs.getString("lastname");
+                dob = rs.getDate("dob");
+                email = rs.getString("email");
+                creationDate = rs.getDate("creationDate");
+                lastAccessDate = LocalDateTime.now();
+            }
+
+            return new User(uname, firstname, lastname, email, dob, creationDate, lastAccessDate);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
     public void login(ActionEvent event) throws IOException, SQLException {
 
         if (usernameField.getText().isBlank() || passwordField.getText().isBlank()) {
@@ -56,13 +83,17 @@ public class LoginController {
         } else {
 
             try {
-                String query = "SELECT count(1) FROM \"User\" WHERE username = '" + usernameField.getText() + "' AND password = '" + passwordField.getText() + "'";
+                String query = "SELECT count(1) FROM \"User\" WHERE username = '" +
+                        usernameField.getText() + "' AND password = '" +
+                        passwordField.getText() + "'";
                 ResultSet rs = PostgresSSH.executeSelect(query);
 
                 if (rs != null) {
                     while (rs.next()) {
                         if (rs.getInt(1) == 1) {
                             loginMessageLabel.setText("Welcome!");
+                            User self = createSelf(usernameField.getText());
+                            Model.setSelf(self);
                             switchToMainPageScene(event);
                         } else {
                             loginMessageLabel.setText("Invalid credentials. Try again.");
