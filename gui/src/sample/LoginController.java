@@ -68,6 +68,8 @@ public class LoginController {
                 lastAccessDate = LocalDateTime.now();
             }
 
+            // need to update lastAccessDate in db
+
             return new User(uname, firstname, lastname, email, dob, creationDate, lastAccessDate);
 
         } catch (Exception e) {
@@ -83,6 +85,7 @@ public class LoginController {
         } else {
 
             try {
+                // implement db security stuff
                 String query = "SELECT count(1) FROM \"User\" WHERE username = '" +
                         usernameField.getText() + "' AND password = '" +
                         passwordField.getText() + "'";
