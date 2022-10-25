@@ -1,6 +1,5 @@
 package sample;
 
-import javafx.beans.Observable;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
@@ -12,10 +11,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 
@@ -27,16 +23,18 @@ import java.util.HashSet;
 import java.util.ResourceBundle;
 import java.util.Set;
 
-public class FollowersController implements Initializable {
+public class SearchAllUsersController implements Initializable {
 
     private Stage stage;
     private Scene scene;
     private Parent root;
 
     @FXML
+    private Label totalUsersLabel;
+    @FXML
     private TextField searchField;
     @FXML
-    private TableView<User> followersTable;
+    private TableView<User> allUsersTable;
     @FXML
     private TableColumn<User,String> usernameColumn;
     @FXML
@@ -44,10 +42,10 @@ public class FollowersController implements Initializable {
     @FXML
     private TableColumn<User, String> actionColumn;
 
-    ObservableList<User> followersList = FXCollections.observableArrayList();
+    ObservableList<User> allUsersList = FXCollections.observableArrayList();
 
-    public void switchToMainPageScene(ActionEvent event) throws IOException {
-        root = FXMLLoader.load(getClass().getResource("MainPage.fxml"));
+    public void switchToFollowingScene(ActionEvent event) throws IOException {
+        root = FXMLLoader.load(getClass().getResource("Following.fxml"));
         stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         scene = new Scene(root);
         stage.setScene(scene);
@@ -83,19 +81,22 @@ public class FollowersController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
-        /*SELECT username, email FROM "User"
-        WHERE username IN (SELECT "userFollowing" from "Follows"
-                WHERE "userFollowed" = 'hhutcheonsjl');*/
+        String countUsersQuery = "SELECT COUNT(*) FROM \"User\"";
 
-        String viewFollowersQuery = "SELECT username, email FROM \"User\" WHERE username IN" +
-                "(SELECT \"userFollowing\" FROM \"Follows\" WHERE \"userFollowed\" = '" +
-                Model.self.getUsername() + "')";
+        String viewAllUsersQuery = "SELECT username, email FROM \"User\"";
 
         String viewWhoIFollowQuery = "SELECT username FROM \"User\" WHERE username IN" +
                 "(SELECT \"userFollowed\" FROM \"Follows\" WHERE \"userFollowing\" = '" +
                 Model.self.getUsername() + "')";
 
         try {
+
+            ResultSet rsCount = PostgresSSH.executeSelect(countUsersQuery);
+            while(rsCount.next()) {
+                Integer count = rsCount.getInt(1);
+                totalUsersLabel.setText("Total users: " + count);
+            }
+
             Set<String> whoIFollowSet = new HashSet<>();
 
             ResultSet rs2 = PostgresSSH.executeSelect(viewWhoIFollowQuery);
@@ -104,8 +105,7 @@ public class FollowersController implements Initializable {
                 whoIFollowSet.add(username);
             }
 
-            ResultSet rs = PostgresSSH.executeSelect(viewFollowersQuery);
-
+            ResultSet rs = PostgresSSH.executeSelect(viewAllUsersQuery);
             while (rs.next()) {
                 String username = rs.getString("username");
                 String email = rs.getString("email");
@@ -125,17 +125,17 @@ public class FollowersController implements Initializable {
                         button.setDisable(true);
                     } );
                 }
-                followersList.add(new User(username, email, button));
+                allUsersList.add(new User(username, email, button));
             }
 
             usernameColumn.setCellValueFactory(new PropertyValueFactory<>("username"));
             emailColumn.setCellValueFactory(new PropertyValueFactory<>("email"));
             actionColumn.setCellValueFactory(new PropertyValueFactory<>("button"));
 
-            followersTable.setItems(followersList);
+            allUsersTable.setItems(allUsersList);
 
             // filter the list
-            FilteredList<User> filteredData = new FilteredList<>(followersList, b -> true);
+            FilteredList<User> filteredData = new FilteredList<>(allUsersList, b -> true);
 
             searchField.textProperty().addListener((observable, oldValue, newValue) -> {
                 filteredData.setPredicate(User -> {
@@ -155,8 +155,8 @@ public class FollowersController implements Initializable {
             });
 
             SortedList<User> sortedData = new SortedList<>(filteredData);
-            sortedData.comparatorProperty().bind(followersTable.comparatorProperty());
-            followersTable.setItems(sortedData);
+            sortedData.comparatorProperty().bind(allUsersTable.comparatorProperty());
+            allUsersTable.setItems(sortedData);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -164,3 +164,4 @@ public class FollowersController implements Initializable {
 
     }
 }
+

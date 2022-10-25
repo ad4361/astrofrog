@@ -1,5 +1,7 @@
 package sample;
 
+import javafx.scene.control.Button;
+
 import java.sql.Date;
 import java.time.LocalDateTime;
 
@@ -12,6 +14,7 @@ public class User {
     private Date dob;
     private Date creationDate;
     private LocalDateTime lastAccessDate;
+    private Button button;
 
     public User(String username, String firstname, String lastname,
                 String email, Date dob, Date creationDate, LocalDateTime lastAccessDate) {
@@ -24,9 +27,10 @@ public class User {
         this.lastAccessDate = lastAccessDate;
     }
 
-    public User(String username, String email) {
+    public User(String username, String email, Button button) {
         this.username = username;
         this.email = email;
+        this.button = button;
     }
 
     public String getUsername() {
@@ -55,6 +59,14 @@ public class User {
 
     public LocalDateTime getLastAccessDate() {
         return this.lastAccessDate;
+    }
+
+    public Button getButton() {
+        return this.button;
+    }
+
+    public void setButton(Button button) {
+        this.button = button;
     }
 
 }

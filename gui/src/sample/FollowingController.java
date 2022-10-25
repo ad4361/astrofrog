@@ -11,6 +11,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
@@ -20,6 +21,7 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.ResultSet;
+import java.sql.Statement;
 import java.util.ResourceBundle;
 
 public class FollowingController implements Initializable {
@@ -36,6 +38,8 @@ public class FollowingController implements Initializable {
     private TableColumn<User,String> usernameColumn;
     @FXML
     private TableColumn<User,String> emailColumn;
+    @FXML
+    private TableColumn<User, String> actionColumn;
 
     ObservableList<User> followingList = FXCollections.observableArrayList();
 
@@ -46,6 +50,28 @@ public class FollowingController implements Initializable {
         stage.setScene(scene);
         stage.show();
     }
+
+    public void switchToSearchAllUsersScene(ActionEvent event) throws IOException {
+        root = FXMLLoader.load(getClass().getResource("SearchAllUsers.fxml"));
+        stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        scene = new Scene(root);
+        stage.setScene(scene);
+        stage.show();
+    }
+
+    public void unfollow(String userFollowing, String userFollowed) {
+
+        String unfollowQuery = "DELETE FROM \"Follows\" WHERE \"userFollowing\" = '" +
+                userFollowing + "' AND \"userFollowed\" = '" + userFollowed + "'";
+
+        try {
+            Statement st = PostgresSSH.connection.createStatement();
+            st.executeUpdate(unfollowQuery);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -59,11 +85,18 @@ public class FollowingController implements Initializable {
             while (rs.next()) {
                 String username = rs.getString("username");
                 String email = rs.getString("email");
-                followingList.add(new User(username, email));
+                Button button = new Button("Unfollow");
+                button.setOnAction((ActionEvent e) -> {
+                    button.setText("Unfollowed X");
+                    unfollow(Model.self.getUsername(), username);
+                    button.setDisable(true);
+                } );
+                followingList.add(new User(username, email, button));
             }
 
             usernameColumn.setCellValueFactory(new PropertyValueFactory<>("username"));
             emailColumn.setCellValueFactory(new PropertyValueFactory<>("email"));
+            actionColumn.setCellValueFactory(new PropertyValueFactory<>("button"));
 
             followingTable.setItems(followingList);
 

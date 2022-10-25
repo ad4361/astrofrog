@@ -25,8 +25,15 @@
         <TableView fx:id="followingTable" layoutX="64.0" layoutY="101.0" prefHeight="257.0" prefWidth="549.0">
             <columns>
                 <TableColumn fx:id="usernameColumn" prefWidth="133.33333587646484" text="Username" />
-                <TableColumn fx:id="emailColumn" prefWidth="230.66664123535156" text="Email" />
+                <TableColumn fx:id="emailColumn" prefWidth="309.3333282470703" text="Email" />
+            <TableColumn fx:id="actionColumn" prefWidth="106.66665649414062" text="Action" />
             </columns>
         </TableView>
+      <Label layoutX="354.0" layoutY="385.0" prefHeight="17.0" prefWidth="173.0" text="Want to follow a new user?">
+         <font>
+            <Font size="14.0" />
+         </font>
+      </Label>
+      <Button fx:id="goBackButton1" layoutX="533.0" layoutY="376.0" mnemonicParsing="false" onAction="#switchToSearchAllUsersScene" prefHeight="37.0" prefWidth="125.0" text="Search ALL users" />
     </children>
 </AnchorPane>

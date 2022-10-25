@@ -24,9 +24,9 @@
         <TextField fx:id="searchField" layoutX="414.0" layoutY="37.0" prefHeight="28.0" prefWidth="236.0" promptText="Enter email..." />
         <TableView fx:id="followersTable" layoutX="52.0" layoutY="91.0" prefHeight="262.0" prefWidth="575.0">
             <columns>
-                <TableColumn fx:id="usernameColumn" prefWidth="140.66661834716797" text="Username" />
-                <TableColumn fx:id="emailColumn" prefWidth="247.9999542236328" text="Email" />
-            <TableColumn fx:id="followColumn" prefWidth="185.33328247070312" />
+                <TableColumn fx:id="usernameColumn" prefWidth="154.00002670288086" text="Username" />
+                <TableColumn fx:id="emailColumn" prefWidth="312.00001525878906" text="Email" />
+            <TableColumn fx:id="actionColumn" prefWidth="111.33331298828125" text="Action" />
             </columns>
         </TableView>
     </children>
