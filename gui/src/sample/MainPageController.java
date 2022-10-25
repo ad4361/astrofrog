@@ -1,5 +1,6 @@
 package sample;
 
+import com.sun.webkit.Timer;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -26,8 +27,9 @@ public class MainPageController {
     }
 
     @FXML
-    public void logout(ActionEvent event) {
-
+    public void logout(ActionEvent event) throws IOException {
+        Model.eraseSelf();
+        switchToWelcomeScene(event);
     }
 
     public void switchToFollowersScene(ActionEvent event) throws IOException {
@@ -40,6 +42,14 @@ public class MainPageController {
 
     public void switchToFollowingScene(ActionEvent event) throws IOException {
         root = FXMLLoader.load(getClass().getResource("Following.fxml"));
+        stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        scene = new Scene(root);
+        stage.setScene(scene);
+        stage.show();
+    }
+
+    public void switchToWelcomeScene(ActionEvent event) throws IOException {
+        root = FXMLLoader.load(getClass().getResource("Welcome.fxml"));
         stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         scene = new Scene(root);
         stage.setScene(scene);
