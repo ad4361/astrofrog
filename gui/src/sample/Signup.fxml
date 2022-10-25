@@ -28,5 +28,6 @@
       <DatePicker fx:id="dobField" layoutX="319.0" layoutY="220.0" prefHeight="25.0" prefWidth="149.0" promptText="MM/DD/YYYY" />
       <Label layoutX="319.0" layoutY="203.0" text="Date of birth" />
       <Button fx:id="signupButton" layoutX="235.0" layoutY="264.0" mnemonicParsing="false" onAction="#signup" text="Signup" />
+      <Label fx:id="warninglabel" layoutX="234.0" layoutY="306.0" />
    </children>
 </AnchorPane>
