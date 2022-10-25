@@ -81,9 +81,18 @@ public class SignupController {
                             saltMaker.append(AlphaNumericString.charAt(index));
                         }
                         String salt = saltMaker.toString();
-                        String combo = passwordField.getText()+ salt;
+                        StringBuilder combo = new StringBuilder();
+                        int j = 0;
+                        for (int i = 0; i < passwordField.getText().length(); i++) {
+                            combo.append(passwordField.getText().charAt(i));
+                            if (j < salt.length()) {
+                                combo.append(salt.charAt(j));
+                                j++;
+                            }
+                        }
+                        String toHash = combo.toString();
                         MessageDigest md = MessageDigest.getInstance("MD5");
-                        md.update(combo.getBytes());
+                        md.update(toHash.getBytes());
                         BigInteger hash = new BigInteger(1, md.digest());
                         String hashedPass = hash.toString(16);
                         Statement st = PostgresSSH.connection.createStatement();

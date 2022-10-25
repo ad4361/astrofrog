@@ -95,18 +95,24 @@ public class LoginController {
 
             try {
                 // implement db security stuff
-                String query = "SELECT count(1) FROM \"User\" WHERE username = '" +
-                        usernameField.getText() + "' AND password = '" +
-                        passwordField.getText() + "'";
                 String anotherquery = "SELECT USERNAME, SALT, HASHEDPASS FROM \"User\" WHERE username = '" +
                         usernameField.getText() + "'";
 
-//                ResultSet rs = PostgresSSH.executeSelect(query);
                 ResultSet test = PostgresSSH.executeSelect(anotherquery);
                 if (test != null) {
                     while (test.next()) {
                         if (test.getString("salt") != null) {
-                            String toHash = passwordField.getText() + test.getString("salt");
+                            String salt = test.getString("salt");
+                            StringBuilder combo = new StringBuilder();
+                            int j = 0;
+                            for (int i = 0; i < passwordField.getText().length(); i++) {
+                                combo.append(passwordField.getText().charAt(i));
+                                if (j < salt.length()) {
+                                    combo.append(salt.charAt(j));
+                                    j++;
+                                }
+                            }
+                            String toHash = combo.toString();
                             MessageDigest md = MessageDigest.getInstance("MD5");
                             md.update(toHash.getBytes());
                             BigInteger hash = new BigInteger(1, md.digest());
