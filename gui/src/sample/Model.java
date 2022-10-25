@@ -8,24 +8,14 @@ public class Model {
     public static User self;
 
     public Model() {
-
     }
 
     public static void setSelf(User user) {
         self = user;
     }
 
-
-/*    public void login(String username, String password) throws SQLException {
-        Connection conn = sample.PostgresSSH.getConnection();
-        String query = "select * from \"User\" where username = '"+ username + "'";
-
-    }*/
-
-    public void signup() {
-        //TODO
+    public static void eraseSelf() {
+        self = null;
     }
-
-
 
 }
