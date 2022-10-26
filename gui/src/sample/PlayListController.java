@@ -17,29 +17,10 @@ import javafx.scene.control.TableView;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-import javafx.beans.value.ObservableValue;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-import javafx.collections.transformation.FilteredList;
-import javafx.collections.transformation.SortedList;
-import javafx.event.ActionEvent;
-import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.fxml.Initializable;
-import javafx.scene.Node;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.scene.control.*;
-import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.stage.Stage;
-
 import java.io.IOException;
-import java.net.URL;
-import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.time.LocalDateTime;
-import java.util.ResourceBundle;
 
 public class PlayListController implements Initializable {
 
@@ -73,7 +54,6 @@ public class PlayListController implements Initializable {
     }
 
     public PlayList createPlaylist(Integer songID, String username) {
-
         // get playlist name
         String getPLName = "SELECT plname FROM \"Playlist\" WHERE username = '" + Model.self.getUsername() + "'";
         String plname = null;
@@ -91,7 +71,7 @@ public class PlayListController implements Initializable {
 
         // get playlist cardinality
         String getNum = "SELECT COUNT(*) FROM \"PLContains\" WHERE \"username\" = '" + Model.self.getUsername() +
-                "' AND \"plNAME\"= '" + plname + "'" ;
+                "' AND \"plNAME\"= '" + plname + "'";
         try {
             ResultSet plNum = PostgresSSH.executeSelect(getNum);
             while (plNum.next()) {
@@ -126,6 +106,12 @@ public class PlayListController implements Initializable {
         }else{
             System.out.println("making playlist " + newPLname.getText());
             String newPLQuery = "INSERT INTO \"Playlist\" VALUES ('" + newPLname.getText() + "', '" + Model.self.getUsername() + "')";
+            try {
+                Statement st = PostgresSSH.connection.createStatement();
+                st.executeUpdate(newPLQuery);
+            } catch (Exception exception) {
+                exception.printStackTrace();
+            }
         }
     }
 
