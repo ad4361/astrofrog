@@ -22,14 +22,14 @@
       </Label>
       <TextField fx:id="searchField" layoutX="375.0" layoutY="32.0" prefHeight="28.0" prefWidth="275.0" />
       <Button fx:id="goBackButton" layoutX="14.0" layoutY="379.0" mnemonicParsing="false" onAction="#switchtoPlaylistPage" prefHeight="37.0" prefWidth="69.0" text="Go back" />
-      <TableView fx:id="allUsersTable" layoutX="65.0" layoutY="102.0" prefHeight="257.0" prefWidth="549.0">
+      <TableView fx:id="songTable" layoutX="65.0" layoutY="102.0" prefHeight="257.0" prefWidth="549.0">
          <columns>
-            <TableColumn fx:id="usernameColumn" prefWidth="142.39993286132812" text="Song" />
-            <TableColumn fx:id="emailColumn" prefWidth="121.60005187988281" text="Artist" />
-            <TableColumn fx:id="actionColumn" prefWidth="88.0" text="Album" />
-            <TableColumn fx:id="usernameColumn1" minWidth="0.0" prefWidth="98.4000244140625" text="Genre" />
-            <TableColumn fx:id="usernameColumn11" minWidth="0.0" prefWidth="49.60003662109375" text="Length" />
-            <TableColumn fx:id="usernameColumn1111" minWidth="0.0" prefWidth="52.800048828125" text="Add" />
+            <TableColumn fx:id="songColumn" prefWidth="142.39993286132812" text="Song" />
+            <TableColumn fx:id="artistColumn" prefWidth="121.60005187988281" text="Artist" />
+            <TableColumn fx:id="albumColumn" prefWidth="88.0" text="Album" />
+            <TableColumn fx:id="genreColumn" minWidth="0.0" prefWidth="98.4000244140625" text="Genre" />
+            <TableColumn fx:id="lengthColumn" minWidth="0.0" prefWidth="49.60003662109375" text="Length" />
+            <TableColumn fx:id="addColumn" minWidth="0.0" prefWidth="52.800048828125" text="Add" />
          </columns>
       </TableView>
       <Label fx:id="totalUsersLabel" layoutX="21.0" layoutY="60.0" prefHeight="17.0" prefWidth="159.0" />

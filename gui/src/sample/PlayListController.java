@@ -72,6 +72,53 @@ public class PlayListController implements Initializable {
         stage.show();
     }
 
+    public PlayList createPlaylist(Integer songID, String username) {
+
+        // get playlist name
+        String getPLName = "SELECT plname FROM \"Playlist\" WHERE username = '" + Model.self.getUsername() + "'";
+        String plname = null;
+        int songTotal = 0;
+        int totalDuration = 0;
+
+        try {
+            ResultSet playlistInfo = PostgresSSH.executeSelect(getPLName);
+            while (playlistInfo.next()) {
+                plname = playlistInfo.getString("plname");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        // get playlist cardinality
+        String getNum = "SELECT COUNT(*) FROM \"PLContains\" WHERE \"username\" = '" + Model.self.getUsername() +
+                "' AND \"plNAME\"= '" + plname + "'" ;
+        try {
+            ResultSet plNum = PostgresSSH.executeSelect(getNum);
+            while (plNum.next()) {
+                songTotal = plNum.getInt(1);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        Button button = new Button("▷");
+        button.setOnAction((ActionEvent e) -> {
+            //INSERT INTO "UserSong" VALUES('fsowley5m', 774, now());
+
+            String listenQuery = "INSERT INTO \"UserSong\" VALUES('" + username + "', " +
+                    songID + ", '" + LocalDateTime.now() + "')";
+            try {
+                Statement st = PostgresSSH.connection.createStatement();
+                st.executeUpdate(listenQuery);
+            } catch (Exception exception) {
+                exception.printStackTrace();
+            }
+        } );
+
+        // now create Playlist
+        return new PlayList(plname, Model.self.getUsername(), totalDuration, songTotal);
+    }
+
     public void makePlaylist(ActionEvent actionEvent) {
 
         if(newPLname.getText().isBlank()){
