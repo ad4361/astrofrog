@@ -35,5 +35,6 @@
          </font>
       </Label>
       <Button fx:id="goBackButton1" layoutX="533.0" layoutY="376.0" mnemonicParsing="false" onAction="#switchToSearchAllUsersScene" prefHeight="37.0" prefWidth="125.0" text="Search ALL users" />
+      <Label fx:id="loadingMusicLabel" layoutX="96.0" layoutY="386.0" prefHeight="17.0" prefWidth="175.0" />
     </children>
 </AnchorPane>

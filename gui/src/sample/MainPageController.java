@@ -90,31 +90,25 @@ public class MainPageController implements Initializable {
 
     public Song createSong(Integer songID) {
 
-        // get song title, releasedate, and length
-        String getTitleDateLength = "SELECT title, releasedate, length FROM \"Song\" WHERE songID = " +
-                songID;
+        // get song title, releasedate, length, artistName, and genreName
+        String getTitleDateLengthArtistGenre = "SELECT S.title, S.releasedate, S.length, SG.\"genreName\", " +
+                "SF.artname FROM \"Song\" S, \"SongGenre\" SG, \"SongFeat\" SF " +
+                "WHERE S.songID = SG.\"songID\" AND SG.\"songID\" = SF.\"songID\" " +
+                "AND S.songID = " + songID;
         String title = null;
         Date releasedate = null;
         int length = 0;
+        String artistName = null;
+        String genreName = null;
 
         try {
-            ResultSet songInfo = PostgresSSH.executeSelect(getTitleDateLength);
+            ResultSet songInfo = PostgresSSH.executeSelect(getTitleDateLengthArtistGenre);
             while (songInfo.next()) {
                 title = songInfo.getString("title");
                 releasedate = songInfo.getDate("releasedate");
                 length = songInfo.getInt("length");
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        // get artist's name
-        String getArtistName = "SELECT artname FROM \"SongFeat\" WHERE \"songID\" = " + songID;
-        String artistName = null;
-        try {
-            ResultSet artistInfo = PostgresSSH.executeSelect(getArtistName);
-            while (artistInfo.next()) {
-                artistName = artistInfo.getString("artname");
+                artistName = songInfo.getString("artname");
+                genreName = songInfo.getString("genreName");
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -141,18 +135,6 @@ public class MainPageController implements Initializable {
             ResultSet listenInfo = PostgresSSH.executeSelect(getListens);
             while (listenInfo.next()) {
                 listenCount = listenInfo.getInt(1);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        // get genre name
-        String getGenre = "SELECT \"genreName\" FROM \"SongGenre\" WHERE \"songID\" = " + songID;
-        String genreName = null;
-        try {
-            ResultSet genreInfo = PostgresSSH.executeSelect(getGenre);
-            while (genreInfo.next()) {
-                genreName = genreInfo.getString("genreName");
             }
         } catch (Exception e) {
             e.printStackTrace();

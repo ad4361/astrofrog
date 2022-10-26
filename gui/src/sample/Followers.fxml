@@ -29,5 +29,6 @@
             <TableColumn fx:id="actionColumn" prefWidth="111.33331298828125" text="Action" />
             </columns>
         </TableView>
+      <Label fx:id="loadingMusicLabel" layoutX="92.0" layoutY="386.0" prefHeight="17.0" prefWidth="175.0" />
     </children>
 </AnchorPane>
