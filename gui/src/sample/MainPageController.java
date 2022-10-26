@@ -118,7 +118,8 @@ public class MainPageController implements Initializable {
                 "AND S.songID = " + songID;
         String title = null;
         Date releasedate = null;
-        int length = 0;
+        int ilength = 0;
+        String length = null;
         String artistName = null;
         String genreName = null;
 
@@ -127,10 +128,20 @@ public class MainPageController implements Initializable {
             while (songInfo.next()) {
                 title = songInfo.getString("title");
                 releasedate = songInfo.getDate("releasedate");
-                length = songInfo.getInt("length");
+                ilength = songInfo.getInt("length");
                 artistName = songInfo.getString("artname");
                 genreName = songInfo.getString("genreName");
             }
+            int minutes = ilength / 60;
+            int seconds = (int) (ilength -(minutes*60));
+            if(seconds <= 9){
+                length = minutes + ":0" + seconds;
+            } else{
+                length = minutes + ":" + seconds;
+            }
+
+
+
         } catch (Exception e) {
             e.printStackTrace();
         }

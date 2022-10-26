@@ -103,7 +103,7 @@ public class PlayListController implements Initializable {
 
         if(newPLname.getText().isBlank()){
             createMessageLabel.setText("Please enter a playlist name");
-        }else{
+        } else{
             System.out.println("making playlist " + newPLname.getText());
             String newPLQuery = "INSERT INTO \"Playlist\" VALUES ('" + newPLname.getText() + "', '" + Model.self.getUsername() + "')";
             try {

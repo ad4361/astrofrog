@@ -9,7 +9,7 @@ public class Song {
     private int songID;
     private String title;
     private Date releasedate;
-    private int length;
+    private String length;
 
     // comes from other relations
     private String artistName;
@@ -19,7 +19,7 @@ public class Song {
 
     private Button button;
 
-    public Song(int songID, String title, Date releasedate, int length, String artistName,
+    public Song(int songID, String title, Date releasedate, String length, String artistName,
                 String albumName, int listenCount, String genreName, Button button) {
         this.songID = songID;
         this.title = title;
@@ -43,7 +43,7 @@ public class Song {
         return this.releasedate;
     }
 
-    public int getLength() {
+    public String getLength() {
         return this.length;
     }
 
