@@ -3,6 +3,7 @@ package sample;
 import com.sun.webkit.Timer;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
@@ -38,6 +39,10 @@ public class MainPageController implements Initializable {
     @FXML
     private ChoiceBox<String> searchChoiceBox;
     @FXML
+    private ChoiceBox<String> sortByChoiceBox;
+    @FXML
+    private ChoiceBox<String> sortOrderChoiceBox;
+    @FXML
     private TextField searchField;
 
     @FXML
@@ -59,6 +64,12 @@ public class MainPageController implements Initializable {
 
     ObservableList<Song> allSongsList = FXCollections.observableArrayList();
     String choice = "Song";
+    String sortChoice = "Song";
+    String sortOrderChoice = "ASC";
+    String query = "SELECT S.songID " +
+            "FROM \"Song\" S, \"SongFeat\" SF " +
+            "WHERE S.songID = SF.\"songID\" AND S.songID BETWEEN 1 AND 300" +
+            "ORDER BY S.title, SF.artname ASC";
 
     @FXML
     public void logout(ActionEvent event) throws IOException {
@@ -173,6 +184,14 @@ public class MainPageController implements Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
         hiLabel.setText("Hi, " + Model.self.getUsername() + "!");
 
+        songColumn.setCellValueFactory(new PropertyValueFactory<>("title"));
+        artistColumn.setCellValueFactory(new PropertyValueFactory<>("artistName"));
+        albumColumn.setCellValueFactory(new PropertyValueFactory<>("albumName"));
+        lengthColumn.setCellValueFactory(new PropertyValueFactory<>("length"));
+        listensColumn.setCellValueFactory(new PropertyValueFactory<>("listenCount"));
+        genreColumn.setCellValueFactory(new PropertyValueFactory<>("genreName"));
+        actionColumn.setCellValueFactory(new PropertyValueFactory<>("button"));
+
         ObservableList<String> list = searchChoiceBox.getItems();
         list.addAll("Song", "Album", "Artist", "Genre");
         String[] choices = new String[] {"Song", "Album", "Artist", "Genre"};
@@ -181,33 +200,97 @@ public class MainPageController implements Initializable {
                     this.choice = choices[new_val.intValue()];
                 });
 
+        ObservableList<String> sortByList = sortByChoiceBox.getItems();
+        sortByList.addAll("Song", "Artist", "Genre", "Year");
+        String[] sortChoices = new String[] {"Song", "Artist", "Genre", "Year"};
+        sortByChoiceBox.getSelectionModel().selectedIndexProperty().addListener(
+                (ObservableValue<? extends Number> observable, Number old_val, Number new_val) -> {
+                    this.sortChoice = sortChoices[new_val.intValue()];
+                    if (this.sortChoice.equals("Song")) {
+                        this.query = "SELECT S.songID " +
+                                "FROM \"Song\" S, \"SongFeat\" SF " +
+                                "WHERE S.songID = SF.\"songID\" AND S.songID BETWEEN 1 AND 300" +
+                                "ORDER BY S.title " + this.sortOrderChoice + ", SF.artname ASC";
+                        allSongsList.clear();
+                        runQuery(query);
+                    } else if (this.sortChoice.equals("Year")) {
+                        this.query = "SELECT S.songID " +
+                                "FROM \"Song\" S " +
+                                "WHERE S.songID BETWEEN 1 AND 300" +
+                                "ORDER BY S.releasedate " + this.sortOrderChoice;
+                        allSongsList.clear();
+                        runQuery(query);
+                    } else if (this.sortChoice.equals("Artist")) {
+                        this.query = "SELECT S.songID " +
+                                "FROM \"Song\" S, \"SongFeat\" SF " +
+                                "WHERE S.songID = SF.\"songID\" AND S.songID BETWEEN 1 AND 300" +
+                                "ORDER BY  SF.artname " + this.sortOrderChoice;
+                        allSongsList.clear();
+                        runQuery(query);
+                    } else if (this.sortChoice.equals("Genre")) {
+                        this.query = "SELECT S.songID " +
+                                "FROM \"Song\" S, \"SongGenre\" SG " +
+                                "WHERE S.songID = SG.\"songID\" AND S.songID BETWEEN 1 AND 300" +
+                                "ORDER BY  SG.\"genreName\" " + this.sortOrderChoice;
+                        allSongsList.clear();
+                        runQuery(query);
+                    }
+                });
 
-        String selectAllSongsQuery = "SELECT S.songID " +
-                "FROM \"Song\" S, \"SongFeat\" SF " +
-                "WHERE S.songID = SF.\"songID\" AND S.songID BETWEEN 1 AND 300" +
-                "ORDER BY S.title, SF.artname";
+        ObservableList<String> sortOrderList = sortOrderChoiceBox.getItems();
+        sortOrderList.addAll("Ascending", "Descending");
+        String[] sortOrderChoices = new String[] {"ASC", "DESC"};
+        sortOrderChoiceBox.getSelectionModel().selectedIndexProperty().addListener(
+                (ObservableValue<? extends Number> observable, Number old_val, Number new_val) -> {
+                    this.sortOrderChoice = sortOrderChoices[new_val.intValue()];
+                    if (this.sortChoice.equals("Song")) {
+                        this.query = "SELECT S.songID " +
+                                "FROM \"Song\" S, \"SongFeat\" SF " +
+                                "WHERE S.songID = SF.\"songID\" AND S.songID BETWEEN 1 AND 300" +
+                                "ORDER BY S.title " + this.sortOrderChoice + ", SF.artname ASC";
+                        allSongsList.clear();
+                        runQuery(query);
+                    } else if (this.sortChoice.equals("Year")) {
+                        this.query = "SELECT S.songID " +
+                                "FROM \"Song\" S " +
+                                "WHERE S.songID BETWEEN 1 AND 300" +
+                                "ORDER BY S.releasedate " + this.sortOrderChoice;
+                        allSongsList.clear();
+                        runQuery(query);
+                    } else if (this.sortChoice.equals("Artist")) {
+                        this.query = "SELECT S.songID " +
+                                "FROM \"Song\" S, \"SongFeat\" SF " +
+                                "WHERE S.songID = SF.\"songID\" AND S.songID BETWEEN 1 AND 300" +
+                                "ORDER BY  SF.artname " + this.sortOrderChoice;
+                        allSongsList.clear();
+                        runQuery(query);
+                    } else if (this.sortChoice.equals("Genre")) {
+                        this.query = "SELECT S.songID " +
+                                "FROM \"Song\" S, \"SongGenre\" SG " +
+                                "WHERE S.songID = SG.\"songID\" AND S.songID BETWEEN 1 AND 300" +
+                                "ORDER BY SG.\"genreName\" " + this.sortOrderChoice;
+                        allSongsList.clear();
+                        runQuery(query);
+                    }
+                });
 
+        runQuery(this.query);
+    }
+
+    public void runQuery(String query) {
         try {
-
-            ResultSet rsAllSongs = PostgresSSH.executeSelect(selectAllSongsQuery);
+            ResultSet rsAllSongs = PostgresSSH.executeSelect(query);
             while (rsAllSongs.next()) {
                 Integer songID = rsAllSongs.getInt("songID");
                 Song song = createSong(songID, Model.self.getUsername());
                 allSongsList.add(song);
             }
 
-            songColumn.setCellValueFactory(new PropertyValueFactory<>("title"));
-            artistColumn.setCellValueFactory(new PropertyValueFactory<>("artistName"));
-            albumColumn.setCellValueFactory(new PropertyValueFactory<>("albumName"));
-            lengthColumn.setCellValueFactory(new PropertyValueFactory<>("length"));
-            listensColumn.setCellValueFactory(new PropertyValueFactory<>("listenCount"));
-            genreColumn.setCellValueFactory(new PropertyValueFactory<>("genreName"));
-            actionColumn.setCellValueFactory(new PropertyValueFactory<>("button"));
-
             songTable.setItems(allSongsList);
 
             // filter the list
             FilteredList<Song> filteredData = new FilteredList<>(allSongsList, b -> true);
+            filteredData.addListener((ListChangeListener.Change<? extends Song> change) -> songTable.refresh());
 
             searchField.textProperty().addListener((observable, oldValue, newValue) -> {
                 filteredData.setPredicate(Song -> {
@@ -219,28 +302,28 @@ public class MainPageController implements Initializable {
                     String searchKeyword = newValue.toLowerCase();
 
                     if (this.choice.equals("Song")) {
-                        if (Song.getTitle().toLowerCase().indexOf(searchKeyword) > -1) {
+                        if (Song.getTitle().toLowerCase().contains(searchKeyword)) {
                             return true;
                         } else {
                             return false;
                         }
                     }
                     else if (this.choice.equals("Artist")) {
-                        if (Song.getArtistName().toLowerCase().indexOf(searchKeyword) > -1) {
+                        if (Song.getArtistName().toLowerCase().contains(searchKeyword)) {
                             return true;
                         } else {
                             return false;
                         }
                     }
                     else if (this.choice.equals("Album")) {
-                        if (Song.getAlbumName().toLowerCase().indexOf(searchKeyword) > -1) {
+                        if (Song.getAlbumName().toLowerCase().contains(searchKeyword)) {
                             return true;
                         } else {
                             return false;
                         }
                     }
                     else if (this.choice.equals("Genre")) {
-                        if (Song.getGenreName().toLowerCase().indexOf(searchKeyword) > -1) {
+                        if (Song.getGenreName().toLowerCase().contains(searchKeyword)) {
                             return true;
                         } else {
                             return false;
