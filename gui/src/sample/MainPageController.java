@@ -21,6 +21,8 @@ import java.io.IOException;
 import java.net.URL;
 import java.sql.Date;
 import java.sql.ResultSet;
+import java.sql.Statement;
+import java.time.LocalDateTime;
 import java.util.ResourceBundle;
 
 public class MainPageController implements Initializable {
@@ -88,7 +90,7 @@ public class MainPageController implements Initializable {
         stage.show();
     }
 
-    public Song createSong(Integer songID) {
+    public Song createSong(Integer songID, String username) {
 
         // get song title, releasedate, length, artistName, and genreName
         String getTitleDateLengthArtistGenre = "SELECT S.title, S.releasedate, S.length, SG.\"genreName\", " +
@@ -140,8 +142,23 @@ public class MainPageController implements Initializable {
             e.printStackTrace();
         }
 
+        Button button = new Button("▷");
+        button.setOnAction((ActionEvent e) -> {
+            //INSERT INTO "UserSong" VALUES('fsowley5m', 774, now());
+
+            String listenQuery = "INSERT INTO \"UserSong\" VALUES('" + username + "', " +
+                    songID + ", '" + LocalDateTime.now() + "')";
+            try {
+                Statement st = PostgresSSH.connection.createStatement();
+                st.executeUpdate(listenQuery);
+            } catch (Exception exception) {
+                exception.printStackTrace();
+            }
+        } );
+
         // now create Song
-        return new Song(songID, title, releasedate, length, artistName, albumName, listenCount, genreName);
+        return new Song(songID, title, releasedate, length, artistName,
+                albumName, listenCount, genreName, button);
     }
 
     @Override
@@ -167,8 +184,7 @@ public class MainPageController implements Initializable {
             ResultSet rsAllSongs = PostgresSSH.executeSelect(selectAllSongsQuery);
             while (rsAllSongs.next()) {
                 Integer songID = rsAllSongs.getInt("songID");
-                //Button button;
-                Song song = createSong(songID);
+                Song song = createSong(songID, Model.self.getUsername());
                 allSongsList.add(song);
             }
 
@@ -178,7 +194,7 @@ public class MainPageController implements Initializable {
             lengthColumn.setCellValueFactory(new PropertyValueFactory<>("length"));
             listensColumn.setCellValueFactory(new PropertyValueFactory<>("listenCount"));
             genreColumn.setCellValueFactory(new PropertyValueFactory<>("genreName"));
-            //actionColumn.setCellValueFactory(new PropertyValueFactory<>("button"));
+            actionColumn.setCellValueFactory(new PropertyValueFactory<>("button"));
 
             songTable.setItems(allSongsList);
 
