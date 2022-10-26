@@ -27,16 +27,14 @@
       </Label>
       <Button fx:id="logoutButton" layoutX="19.0" layoutY="353.0" mnemonicParsing="false" onAction="#logout" prefHeight="37.0" prefWidth="69.0" text="Logout" />
       <Button fx:id="followersButton" layoutX="19.0" layoutY="109.0" mnemonicParsing="false" onAction="#switchToFollowersScene" prefHeight="37.0" prefWidth="69.0" text="Followers" />
-      <TableView layoutX="101.0" layoutY="97.0" prefHeight="294.0" prefWidth="538.0">
+      <TableView fx:id="songTable" layoutX="101.0" layoutY="97.0" prefHeight="294.0" prefWidth="569.0">
         <columns>
-          <TableColumn prefWidth="54.39996337890625" text="Song" />
-          <TableColumn prefWidth="61.5999755859375" text="Artist" />
-            <TableColumn prefWidth="53.60003662109375" text="Length" />
-            <TableColumn prefWidth="86.39996337890625" text="Release Date" />
-            <TableColumn prefWidth="64.00006103515625" text="Album" />
-            <TableColumn minWidth="1.5999755859375" prefWidth="57.5999755859375" text="Track #" />
-            <TableColumn prefWidth="62.39996337890625" text="Genre" />
-            <TableColumn prefWidth="95.99997558593748" text="Play?" />
+          <TableColumn fx:id="songColumn" prefWidth="132.66661834716797" text="Song" />
+          <TableColumn fx:id="artistColumn" minWidth="0.0" prefWidth="122.00001525878906" text="Artist" />
+            <TableColumn fx:id="albumColumn" prefWidth="133.33331298828125" text="Album" />
+            <TableColumn fx:id="lengthColumn" prefWidth="61.333343505859375" text="Length" />
+            <TableColumn fx:id="listensColumn" minWidth="1.5999755859375" prefWidth="64.6666259765625" text="Listens" />
+            <TableColumn fx:id="actionColumn" prefWidth="53.3333740234375" text="Play" />
         </columns>
       </TableView>
       <Button fx:id="searchButton" layoutX="596.0" layoutY="6.0" mnemonicParsing="false" prefHeight="37.0" prefWidth="69.0" text="Search" />

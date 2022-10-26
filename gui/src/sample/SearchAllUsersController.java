@@ -135,13 +135,13 @@ public class SearchAllUsersController implements Initializable {
             allUsersTable.setItems(allUsersList);
 
             // filter the list
-            FilteredList<User> filteredData = new FilteredList<>(allUsersList, b -> true);
+            FilteredList<User> filteredData = new FilteredList<>(allUsersList, b -> false);
 
             searchField.textProperty().addListener((observable, oldValue, newValue) -> {
                 filteredData.setPredicate(User -> {
 
                     if (newValue.isEmpty() || newValue.isBlank() || newValue == null) {
-                        return true;
+                        return false;
                     }
 
                     String searchKeyword = newValue.toLowerCase();
