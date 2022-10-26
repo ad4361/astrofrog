@@ -64,10 +64,12 @@ public class PlayListController implements Initializable {
         stage.show();
     }
 
-    public void switchToFollowerSelectScene(ActionEvent actionEvent) {
-    }
-
-    public void switchToSongSearchScene(ActionEvent actionEvent) {
+    public void switchToSongSearchScene(ActionEvent event) throws IOException  {
+        root = FXMLLoader.load(getClass().getResource("SongSearch.fxml"));
+        stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        scene = new Scene(root);
+        stage.setScene(scene);
+        stage.show();
     }
 
     public void makePlaylist(ActionEvent actionEvent) {
