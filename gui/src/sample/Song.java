@@ -15,17 +15,19 @@ public class Song {
     private String artistName;
     private String albumName;
     private int listenCount;
+    private String genreName;
 
     private Button button;
 
     public Song(int songID, String title, Date releasedate, int length, String artistName,
-                String albumName, int listenCount) {
+                String albumName, int listenCount, String genreName) {
         this.songID = songID;
         this.title = title;
         this.releasedate = releasedate;
         this.length = length;
         this.artistName = artistName;
         this.albumName = albumName; this.listenCount = listenCount;
+        this.genreName = genreName;
     }
 
     public int getSongID() {
@@ -54,5 +56,9 @@ public class Song {
 
     public int getListenCount() {
         return this.listenCount;
+    }
+
+    public String getGenreName() {
+        return this.genreName;
     }
 }

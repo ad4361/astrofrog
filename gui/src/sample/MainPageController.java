@@ -1,6 +1,7 @@
 package sample;
 
 import com.sun.webkit.Timer;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
@@ -33,13 +34,7 @@ public class MainPageController implements Initializable {
     @FXML
     private Label hiLabel;
     @FXML
-    private CheckBox songCheckBox;
-    @FXML
-    private CheckBox albumCheckBox;
-    @FXML
-    private CheckBox artistCheckBox;
-    @FXML
-    private CheckBox genreCheckBox;
+    private ChoiceBox<String> searchChoiceBox;
     @FXML
     private TextField searchField;
 
@@ -56,9 +51,12 @@ public class MainPageController implements Initializable {
     @FXML
     private TableColumn<Song, Integer> listensColumn;
     @FXML
+    private TableColumn<Song, String> genreColumn;
+    @FXML
     private TableColumn<Song, String> actionColumn;
 
     ObservableList<Song> allSongsList = FXCollections.observableArrayList();
+    String choice = "Song";
 
     @FXML
     public void logout(ActionEvent event) throws IOException {
@@ -148,15 +146,35 @@ public class MainPageController implements Initializable {
             e.printStackTrace();
         }
 
+        // get genre name
+        String getGenre = "SELECT \"genreName\" FROM \"SongGenre\" WHERE \"songID\" = " + songID;
+        String genreName = null;
+        try {
+            ResultSet genreInfo = PostgresSSH.executeSelect(getGenre);
+            while (genreInfo.next()) {
+                genreName = genreInfo.getString("genreName");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         // now create Song
-        return new Song(songID, title, releasedate, length, artistName, albumName, listenCount);
+        return new Song(songID, title, releasedate, length, artistName, albumName, listenCount, genreName);
     }
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         hiLabel.setText("Hi, " + Model.self.getUsername() + "!");
 
-        //get all songs (?)
+        ObservableList<String> list = searchChoiceBox.getItems();
+        list.addAll("Song", "Album", "Artist", "Genre");
+        String[] choices = new String[] {"Song", "Album", "Artist", "Genre"};
+        searchChoiceBox.getSelectionModel().selectedIndexProperty().addListener(
+                (ObservableValue<? extends Number> observable, Number old_val, Number new_val) -> {
+                    this.choice = choices[new_val.intValue()];
+                });
+
+
         String selectAllSongsQuery = "SELECT S.songID " +
                 "FROM \"Song\" S, \"SongFeat\" SF " +
                 "WHERE S.songID = SF.\"songID\" AND S.songID BETWEEN 1 AND 300" +
@@ -177,12 +195,13 @@ public class MainPageController implements Initializable {
             albumColumn.setCellValueFactory(new PropertyValueFactory<>("albumName"));
             lengthColumn.setCellValueFactory(new PropertyValueFactory<>("length"));
             listensColumn.setCellValueFactory(new PropertyValueFactory<>("listenCount"));
+            genreColumn.setCellValueFactory(new PropertyValueFactory<>("genreName"));
             //actionColumn.setCellValueFactory(new PropertyValueFactory<>("button"));
 
             songTable.setItems(allSongsList);
 
             // filter the list
-            FilteredList<Song> filteredData = new FilteredList<>(allSongsList, b -> false);
+            FilteredList<Song> filteredData = new FilteredList<>(allSongsList, b -> true);
 
             searchField.textProperty().addListener((observable, oldValue, newValue) -> {
                 filteredData.setPredicate(Song -> {
@@ -193,11 +212,35 @@ public class MainPageController implements Initializable {
 
                     String searchKeyword = newValue.toLowerCase();
 
-                    if (Song.getTitle().toLowerCase().indexOf(searchKeyword) > -1) {
-                        return true;
-                    } else {
-                        return false;
+                    if (this.choice.equals("Song")) {
+                        if (Song.getTitle().toLowerCase().indexOf(searchKeyword) > -1) {
+                            return true;
+                        } else {
+                            return false;
+                        }
                     }
+                    else if (this.choice.equals("Artist")) {
+                        if (Song.getArtistName().toLowerCase().indexOf(searchKeyword) > -1) {
+                            return true;
+                        } else {
+                            return false;
+                        }
+                    }
+                    else if (this.choice.equals("Album")) {
+                        if (Song.getAlbumName().toLowerCase().indexOf(searchKeyword) > -1) {
+                            return true;
+                        } else {
+                            return false;
+                        }
+                    }
+                    else if (this.choice.equals("Genre")) {
+                        if (Song.getGenreName().toLowerCase().indexOf(searchKeyword) > -1) {
+                            return true;
+                        } else {
+                            return false;
+                        }
+                    }
+                    return false;
                 });
             });
 
