@@ -8,23 +8,24 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="431.0" prefWidth="680.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane prefHeight="431.0" prefWidth="680.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.PlayListController">
    <children>
-      <Label layoutX="19.0" layoutY="14.0" prefHeight="38.0" prefWidth="269.0" text="Here are your playlists!">
+      <Label fx:id="playlistOwner" layoutX="19.0" layoutY="14.0" prefHeight="38.0" prefWidth="269.0">
          <font>
             <Font size="25.0" />
          </font>
       </Label>
-      <Button layoutX="18.0" layoutY="106.0" mnemonicParsing="false" prefHeight="37.0" prefWidth="69.0" text="Friends" />
-      <Button layoutX="18.0" layoutY="340.0" mnemonicParsing="false" prefHeight="37.0" prefWidth="69.0" text="Logout" />
-      <Button layoutX="18.0" layoutY="177.0" mnemonicParsing="false" prefHeight="38.0" prefWidth="86.0" text="Song Search" />
+      <Button fx:id="friendButton"  onAction="#switchToFollowerSelectScene" layoutX="18.0" layoutY="106.0" mnemonicParsing="false" prefHeight="37.0" prefWidth="69.0" text="Following" />
+      <Button fx:id="BackButton" onAction="#switchToMainPage" layoutX="18.0" layoutY="340.0" mnemonicParsing="false" prefHeight="37.0" prefWidth="69.0" text="Back" />
+      <Button fx:id="searchButton"  onAction="#switchToSongSearchScene" layoutX="18.0" layoutY="177.0" mnemonicParsing="false" prefHeight="38.0" prefWidth="86.0" text="Song Search" />
       <Label layoutX="108.0" layoutY="378.0" prefHeight="38.0" prefWidth="151.0" text="Create new playlist:">
          <font>
             <Font size="17.0" />
          </font>
       </Label>
-      <TextField layoutX="271.0" layoutY="386.0" prefHeight="30.0" prefWidth="236.0" promptText="Playlist name...." />
-      <Button layoutX="533.0" layoutY="382.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="62.0" text="Create" />
+      <TextField fx:id="newPLname" layoutX="271.0" layoutY="386.0" prefHeight="30.0" prefWidth="236.0" promptText="Playlist name...." />
+      <Button fx:id="createButton"  onAction="#makePlaylist" layoutX="533.0" layoutY="382.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="62.0" text="Create" />
+      <Label fx:id="createMessageLabel" layoutX="600.0" layoutY="382.0" prefHeight="25.0" prefWidth="213.0" textFill="#e20909" />
       <TableView layoutX="138.0" layoutY="74.0" prefHeight="260.0" prefWidth="521.0">
         <columns>
           <TableColumn prefWidth="108.0" text="PlayList Name" />

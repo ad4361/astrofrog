@@ -82,6 +82,14 @@ public class MainPageController implements Initializable {
         stage.show();
     }
 
+    public void switchToPlaylistScene(ActionEvent event) throws IOException {
+        root = FXMLLoader.load(getClass().getResource("PlaylistPage.fxml"));
+        stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        scene = new Scene(root);
+        stage.setScene(scene);
+        stage.show();
+    }
+
     public void switchToWelcomeScene(ActionEvent event) throws IOException {
         root = FXMLLoader.load(getClass().getResource("Welcome.fxml"));
         stage = (Stage) ((Node) event.getSource()).getScene().getWindow();

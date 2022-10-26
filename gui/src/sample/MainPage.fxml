@@ -11,7 +11,7 @@
 
 <AnchorPane prefHeight="431.0" prefWidth="829.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.MainPageController">
    <children>
-      <Button fx:id="playlistsButton" layoutX="19.0" layoutY="244.0" mnemonicParsing="false" prefHeight="37.0" prefWidth="69.0" text="Playlists" />
+      <Button fx:id="playlistsButton" layoutX="19.0" layoutY="244.0" mnemonicParsing="false" onAction="#switchToPlaylistScene" prefHeight="37.0" prefWidth="69.0" text="Playlists" />
 
       <Label fx:id="hiLabel" layoutX="27.0" layoutY="17.0" prefHeight="45.0" prefWidth="257.0" textAlignment="CENTER">
          <font>
