@@ -1,38 +1,52 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ChoiceBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="431.0" prefWidth="680.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.PLDetailsController">
+<AnchorPane prefHeight="460.0" prefWidth="742.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.PLDetailsController">
    <children>
-      <Label fx:id="plNameLabel" layoutX="18.0" layoutY="27.0" prefHeight="38.0" prefWidth="639.0">
+      <Label fx:id="plNameLabel" layoutX="13.0" layoutY="14.0" prefHeight="38.0" prefWidth="639.0">
          <font>
             <Font size="25.0" />
          </font>
       </Label>
-      <Button fx:id="goBackButton" layoutX="14.0" layoutY="379.0" mnemonicParsing="false" onAction="#switchtoPlaylistPage" prefHeight="37.0" prefWidth="69.0" text="Go back" />
-      <TableView fx:id="songTable" layoutX="21.0" layoutY="87.0" prefHeight="257.0" prefWidth="639.0">
+      <Button fx:id="goBackButton" layoutX="13.0" layoutY="402.0" mnemonicParsing="false" onAction="#switchtoPlaylistPage" prefHeight="37.0" prefWidth="69.0" text="Go back" />
+      <TableView fx:id="songTable" layoutX="20.0" layoutY="131.0" prefHeight="257.0" prefWidth="703.0">
          <columns>
             <TableColumn fx:id="songColumn" prefWidth="202.66665077209473" text="Song" />
-            <TableColumn fx:id="artistColumn" prefWidth="109.33332824707031" text="Artist" />
-            <TableColumn fx:id="albumColumn" prefWidth="123.33331298828125" text="Album" />
-            <TableColumn fx:id="genreColumn" minWidth="0.0" prefWidth="98.66659545898438" text="Genre" />
+            <TableColumn fx:id="artistColumn" prefWidth="118.6666259765625" text="Artist" />
+            <TableColumn fx:id="albumColumn" prefWidth="114.00006103515625" text="Album" />
+            <TableColumn fx:id="genreColumn" minWidth="0.0" prefWidth="105.33334350585938" text="Genre" />
             <TableColumn fx:id="lengthColumn" minWidth="0.0" prefWidth="53.33331298828125" text="Length" />
-            <TableColumn fx:id="addColumn" minWidth="0.0" prefWidth="49.3333740234375" text="Remove" />
+            <TableColumn fx:id="listensColumn" minWidth="0.0" prefWidth="54.0" text="Listens" />
+            <TableColumn fx:id="actionColumn" prefWidth="53.33331298828125" text="Remove" />
          </columns>
       </TableView>
-      <Label layoutX="13.0" layoutY="350.0" prefHeight="17.0" prefWidth="246.0" text="I LOVE PLAYLISTS!!! ❤❤❤❤❤❤" />
-      <Button layoutX="214.0" layoutY="358.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="89.0" text="Add a Song" />
-      <Button layoutX="209.0" layoutY="396.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="99.0" text="Add an Album" />
-      <Button layoutX="340.0" layoutY="371.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="117.0" text="Remove an Album" />
-      <Button fx:id="playButton" layoutX="560.0" layoutY="362.0" mnemonicParsing="false" prefHeight="37.0" prefWidth="99.0" text="▷ PLAY">
+      <Label layoutX="120.0" layoutY="443.0" prefHeight="17.0" prefWidth="246.0" text="I LOVE PLAYLISTS!!! ❤❤❤❤❤❤" />
+      <Button layoutX="169.0" layoutY="413.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="89.0" text="Add a Song" />
+      <Button layoutX="340.0" layoutY="408.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="99.0" text="Add an Album" />
+      <Button layoutX="258.0" layoutY="413.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="117.0" text="Remove an Album" />
+      <Button fx:id="playButton" layoutX="620.0" layoutY="399.0" mnemonicParsing="false" prefHeight="37.0" prefWidth="99.0" text="▷ PLAY">
          <font>
             <Font size="20.0" />
          </font>
       </Button>
+      <TextField fx:id="searchField" layoutX="82.0" layoutY="58.0" prefHeight="25.0" prefWidth="293.0" />
+      <Label layoutX="19.0" layoutY="52.0" prefHeight="37.0" prefWidth="57.0" text="Search">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Label>
+      <ChoiceBox fx:id="searchChoiceBox" layoutX="305.0" layoutY="88.0" prefHeight="25.0" prefWidth="69.0" value="Song" />
+      <Label layoutX="133.0" layoutY="92.0" text="Select a category to search by:" />
+      <Label layoutX="471.0" layoutY="92.0" text="Sort by:" />
+      <ChoiceBox fx:id="sortByChoiceBox" layoutX="523.0" layoutY="88.0" prefHeight="25.0" prefWidth="69.0" value="Song" />
+      <ChoiceBox fx:id="sortOrderChoiceBox" layoutX="608.0" layoutY="88.0" prefHeight="25.0" prefWidth="112.0" value="Ascending" />
    </children>
 </AnchorPane>
