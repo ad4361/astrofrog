@@ -32,8 +32,6 @@ public class MainPageController implements Initializable {
     private Scene scene;
     private Parent root;
 
-
-
     @FXML
     private Label hiLabel;
     @FXML
@@ -312,35 +310,13 @@ public class MainPageController implements Initializable {
 
                     String searchKeyword = newValue.toLowerCase();
 
-                    if (this.choice.equals("Song")) {
-                        if (Song.getTitle().toLowerCase().contains(searchKeyword)) {
-                            return true;
-                        } else {
-                            return false;
-                        }
-                    }
-                    else if (this.choice.equals("Artist")) {
-                        if (Song.getArtistName().toLowerCase().contains(searchKeyword)) {
-                            return true;
-                        } else {
-                            return false;
-                        }
-                    }
-                    else if (this.choice.equals("Album")) {
-                        if (Song.getAlbumName().toLowerCase().contains(searchKeyword)) {
-                            return true;
-                        } else {
-                            return false;
-                        }
-                    }
-                    else if (this.choice.equals("Genre")) {
-                        if (Song.getGenreName().toLowerCase().contains(searchKeyword)) {
-                            return true;
-                        } else {
-                            return false;
-                        }
-                    }
-                    return false;
+                    return switch (this.choice) {
+                        case "Song" -> Song.getTitle().toLowerCase().contains(searchKeyword);
+                        case "Artist" -> Song.getArtistName().toLowerCase().contains(searchKeyword);
+                        case "Album" -> Song.getAlbumName().toLowerCase().contains(searchKeyword);
+                        case "Genre" -> Song.getGenreName().toLowerCase().contains(searchKeyword);
+                        default -> false;
+                    };
                 });
             });
 

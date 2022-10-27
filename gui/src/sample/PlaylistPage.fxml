@@ -1,37 +1,36 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import com.gluonhq.charm.glisten.control.TextField?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="431.0" prefWidth="680.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.PlayListController">
+<AnchorPane maxWidth="683.0" prefHeight="414.0" prefWidth="668.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.PlayListController">
    <children>
       <Label fx:id="playlistOwner" layoutX="19.0" layoutY="14.0" prefHeight="38.0" prefWidth="269.0">
          <font>
             <Font size="25.0" />
          </font>
       </Label>
-      <Button fx:id="BackButton" layoutX="18.0" layoutY="340.0" mnemonicParsing="false" onAction="#switchToMainPage" prefHeight="37.0" prefWidth="69.0" text="Back" />
-      <Button fx:id="searchButton" layoutX="18.0" layoutY="177.0" mnemonicParsing="false" onAction="#switchToSongSearchScene" prefHeight="38.0" prefWidth="86.0" text="Song Search" />
-      <Label layoutX="108.0" layoutY="378.0" prefHeight="38.0" prefWidth="151.0" text="Create new playlist:">
+      <Button fx:id="BackButton" layoutX="14.0" layoutY="363.0" mnemonicParsing="false" onAction="#switchToMainPage" prefHeight="37.0" prefWidth="69.0" text="Back" />
+      <Label layoutX="222.0" layoutY="363.0" prefHeight="38.0" prefWidth="151.0" text="Create new playlist:">
          <font>
-            <Font size="17.0" />
+            <Font size="13.0" />
          </font>
       </Label>
-      <TextField fx:id="newPLname" layoutX="271.0" layoutY="386.0" prefHeight="30.0" prefWidth="236.0" promptText="Playlist name...." />
-      <Button fx:id="createButton" layoutX="533.0" layoutY="382.0" mnemonicParsing="false" onAction="#makePlaylist" prefHeight="30.0" prefWidth="62.0" text="Create" />
-      <Label fx:id="createMessageLabel" layoutX="600.0" layoutY="382.0" prefHeight="25.0" prefWidth="213.0" textFill="#e20909" />
-      <TableView layoutX="138.0" layoutY="74.0" prefHeight="260.0" prefWidth="521.0">
+      <Button fx:id="createButton" layoutX="554.0" layoutY="367.0" mnemonicParsing="false" onAction="#makePlaylist" prefHeight="30.0" prefWidth="62.0" text="Create" />
+      <Label fx:id="createMessageLabel" layoutX="341.0" layoutY="343.0" prefHeight="25.0" prefWidth="269.0" textFill="#e20909" />
+      <TableView fx:id="playlistTable" layoutX="49.0" layoutY="74.0" prefHeight="260.0" prefWidth="563.0">
         <columns>
-          <TableColumn fx:id="nameColumn" prefWidth="239.99996948242188" text="PlayList Name" />
-          <TableColumn fx:id="lenColumn" prefWidth="106.4000244140625" text="Length" />
-            <TableColumn fx:id="numColumn" minWidth="0.0" prefWidth="120.80001831054688" text="Number of Songs" />
-            <TableColumn fx:id="viewColumn" minWidth="0.0" prefWidth="56.00006103515625" text="View" />
+          <TableColumn fx:id="nameColumn" prefWidth="332.6666564941406" text="Playlist" />
+          <TableColumn fx:id="lenColumn" prefWidth="70.66668701171875" text="Duration" />
+            <TableColumn fx:id="numColumn" minWidth="0.0" prefWidth="104.66668701171875" text="Number of Songs" />
+            <TableColumn fx:id="viewColumn" minWidth="0.0" prefWidth="52.0" text="View" />
         </columns>
       </TableView>
+      <TextField fx:id="newPLname" layoutX="341.0" layoutY="369.0" prefHeight="25.0" prefWidth="199.0" promptText="new playlist name" />
    </children>
 </AnchorPane>
