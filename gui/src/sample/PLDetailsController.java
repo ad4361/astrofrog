@@ -81,6 +81,14 @@ public class PLDetailsController implements Initializable {
         stage.show();
     }
 
+    public void switchToSongSearch(ActionEvent event) throws IOException {
+        root = FXMLLoader.load(getClass().getResource("SongSearch.fxml"));
+        stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        scene = new Scene(root);
+        stage.setScene(scene);
+        stage.show();
+    }
+
     public Song createSong(Integer songID, String username) {
 
         // get song title, releasedate, length, artistName, and genreName

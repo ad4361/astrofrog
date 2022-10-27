@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ChoiceBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
@@ -8,31 +9,40 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="431.0" prefWidth="680.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.SongSearchController">
+<AnchorPane prefHeight="431.0" prefWidth="807.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.SongSearchController">
    <children>
-      <Label layoutX="21.0" layoutY="27.0" prefHeight="38.0" prefWidth="233.0" text="Add songs to Playlist">
+      <Label layoutX="21.0" layoutY="17.0" prefHeight="38.0" prefWidth="233.0" text="Add a song">
          <font>
             <Font size="25.0" />
          </font>
       </Label>
-      <Label layoutX="294.0" layoutY="27.0" prefHeight="38.0" prefWidth="107.0" text="Search for song:">
+      <Label layoutX="368.0" layoutY="27.0" prefHeight="38.0" prefWidth="107.0" text="Search">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Label>
+      <TextField fx:id="searchField" layoutX="429.0" layoutY="32.0" prefHeight="28.0" prefWidth="302.0" />
+      <Button fx:id="goBackButton" layoutX="14.0" layoutY="379.0" mnemonicParsing="false" onAction="#switchToPLDetailsScene" prefHeight="37.0" prefWidth="69.0" text="Go back" />
+      <TableView fx:id="songTable" layoutX="30.0" layoutY="99.0" prefHeight="257.0" prefWidth="703.0">
+         <columns>
+            <TableColumn fx:id="songColumn" prefWidth="202.66665077209473" text="Song" />
+            <TableColumn fx:id="artistColumn" prefWidth="118.6666259765625" text="Artist" />
+            <TableColumn fx:id="albumColumn" prefWidth="114.00006103515625" text="Album" />
+            <TableColumn fx:id="genreColumn" minWidth="0.0" prefWidth="105.33334350585938" text="Genre" />
+            <TableColumn fx:id="lengthColumn" minWidth="0.0" prefWidth="53.33331298828125" text="Length" />
+            <TableColumn fx:id="listensColumn" minWidth="0.0" prefWidth="54.0" text="Listens" />
+            <TableColumn fx:id="actionColumn" prefWidth="53.33331298828125" text="Add" />
+         </columns>
+      </TableView>
+      <ChoiceBox fx:id="searchChoiceBox" layoutX="661.0" layoutY="65.0" prefHeight="25.0" prefWidth="69.0" value="Song" />
+      <Label layoutX="493.0" layoutY="69.0" text="Select a category to search by:" />
+      <ChoiceBox fx:id="sortOrderChoiceBox" layoutX="621.0" layoutY="366.0" prefHeight="25.0" prefWidth="112.0" value="Ascending" />
+      <ChoiceBox fx:id="sortByChoiceBox" layoutX="545.0" layoutY="366.0" prefHeight="25.0" prefWidth="69.0" value="Song" />
+      <Label layoutX="493.0" layoutY="370.0" text="Sort by:" />
+      <Label fx:id="plNameLabel" layoutX="21.0" layoutY="56.0" prefHeight="17.0" prefWidth="302.0">
          <font>
             <Font size="11.0" />
          </font>
       </Label>
-      <TextField fx:id="searchField" layoutX="375.0" layoutY="32.0" prefHeight="28.0" prefWidth="275.0" />
-      <Button fx:id="goBackButton" layoutX="14.0" layoutY="379.0" mnemonicParsing="false" onAction="#switchtoPlaylistPage" prefHeight="37.0" prefWidth="69.0" text="Go back" />
-      <TableView fx:id="songTable" layoutX="65.0" layoutY="102.0" prefHeight="257.0" prefWidth="549.0">
-         <columns>
-            <TableColumn fx:id="songColumn" prefWidth="142.39993286132812" text="Song" />
-            <TableColumn fx:id="artistColumn" prefWidth="121.60005187988281" text="Artist" />
-            <TableColumn fx:id="albumColumn" prefWidth="88.0" text="Album" />
-            <TableColumn fx:id="genreColumn" minWidth="0.0" prefWidth="98.4000244140625" text="Genre" />
-            <TableColumn fx:id="lengthColumn" minWidth="0.0" prefWidth="49.60003662109375" text="Length" />
-            <TableColumn fx:id="addColumn" minWidth="0.0" prefWidth="52.800048828125" text="Add" />
-         </columns>
-      </TableView>
-      <Label fx:id="totalUsersLabel" layoutX="21.0" layoutY="60.0" prefHeight="17.0" prefWidth="159.0" />
-      <Label layoutX="519.0" layoutY="14.0" prefHeight="17.0" prefWidth="167.0" text="Start typing to see songs!" />
    </children>
 </AnchorPane>
