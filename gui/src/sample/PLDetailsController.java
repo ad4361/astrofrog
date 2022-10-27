@@ -23,7 +23,10 @@ import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.ResourceBundle;
+import java.util.Set;
 
 public class PLDetailsController implements Initializable {
 
@@ -87,6 +90,52 @@ public class PLDetailsController implements Initializable {
         scene = new Scene(root);
         stage.setScene(scene);
         stage.show();
+    }
+
+    public void play() {
+        try {
+            // get songID for every song in the playlist
+            ArrayList<Integer> plSongIDs = new ArrayList<>();
+            String getPLSongsQuery = "SELECT \"songID\" FROM \"PLContains\" " +
+                    "WHERE \"plNAME\" = '" + Model.PLname + "' AND username = '" +
+                    Model.self.getUsername() + "'";
+            ResultSet plSongs = PostgresSSH.executeSelect(getPLSongsQuery);
+            while (plSongs.next()) {
+                Integer songID = plSongs.getInt(1);
+                plSongIDs.add(songID);
+            }
+
+            // add new row to UserSong relation for each songID
+            for (Integer songID : plSongIDs) {
+                String listenQuery = "INSERT INTO \"UserSong\" VALUES('" + Model.self.getUsername() +
+                        "', " + songID + ", '" + LocalDateTime.now() + "')";
+                Statement st = PostgresSSH.connection.createStatement();
+                st.executeUpdate(listenQuery);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        //INSERT INTO "UserSong" VALUES('fsowley5m', 774, now());
+    }
+
+    public void deletePlaylist(ActionEvent e) {
+
+        String deleteSongs = "DELETE FROM \"PLContains\" " +
+                "WHERE \"plNAME\" = '" + Model.PLname + "' AND username = '" +
+                Model.self.getUsername() + "'";
+        String deletePlaylist = "DELETE FROM \"Playlist\" " +
+                "WHERE \"plname\" = '" + Model.PLname + "' AND username = '" +
+                Model.self.getUsername() + "'";
+
+        try {
+            Statement st = PostgresSSH.connection.createStatement();
+            st.executeUpdate(deleteSongs);
+            st.executeUpdate(deletePlaylist);
+            switchtoPlaylistPage(e);
+        } catch(Exception exception) {
+            exception.printStackTrace();
+        }
     }
 
     public Song createSong(Integer songID, String username) {

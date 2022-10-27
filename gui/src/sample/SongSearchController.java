@@ -71,14 +71,6 @@ public class SongSearchController implements Initializable {
             "WHERE S.songID = SF.\"songID\" AND S.songID BETWEEN 1 AND 300" +
             "ORDER BY S.title, SF.artname ASC";
 
-    public void switchtoPlaylistPage(ActionEvent event) throws IOException {
-        root = FXMLLoader.load(getClass().getResource("PlaylistPage.fxml"));
-        stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        scene = new Scene(root);
-        stage.setScene(scene);
-        stage.show();
-    }
-
     public void switchToPLDetailsScene(ActionEvent event) throws IOException  {
         root = FXMLLoader.load(getClass().getResource("PLDetails.fxml"));
         stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
