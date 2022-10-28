@@ -92,6 +92,14 @@ public class PLDetailsController implements Initializable {
         stage.show();
     }
 
+    public void switchToEditPlaylist(ActionEvent event) throws IOException {
+        root = FXMLLoader.load(getClass().getResource("EditPlaylist.fxml"));
+        stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        scene = new Scene(root);
+        stage.setScene(scene);
+        stage.show();
+    }
+
     public void play() {
         try {
             // get songID for every song in the playlist

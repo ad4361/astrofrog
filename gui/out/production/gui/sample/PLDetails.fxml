@@ -52,7 +52,7 @@
             <Font size="11.0" />
          </font>
       </Button>
-      <Button layoutX="628.0" layoutY="8.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="99.0" text="Edit playlist">
+      <Button layoutX="628.0" layoutY="8.0" mnemonicParsing="false" onAction="#switchToEditPlaylist" prefHeight="25.0" prefWidth="99.0" text="Edit playlist">
          <font>
             <Font size="11.0" />
          </font>
