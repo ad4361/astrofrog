@@ -83,7 +83,8 @@ public class SearchAllUsersController implements Initializable {
 
         String countUsersQuery = "SELECT COUNT(*) FROM \"User\"";
 
-        String viewAllUsersQuery = "SELECT username, email FROM \"User\"";
+        String viewAllUsersQuery = "SELECT username, email FROM \"User\" WHERE username != '"
+                + Model.self.getUsername() + "'" ;
 
         String viewWhoIFollowQuery = "SELECT username FROM \"User\" WHERE username IN" +
                 "(SELECT \"userFollowed\" FROM \"Follows\" WHERE \"userFollowing\" = '" +
