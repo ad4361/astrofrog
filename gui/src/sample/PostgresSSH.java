@@ -52,6 +52,11 @@ public class PostgresSSH {
 
         } catch (Exception e) {
             e.printStackTrace();
+            try {
+                PostgresSSH.connection.close();
+            } catch (SQLException throwables) {
+                throwables.printStackTrace();
+            }
         }
     }
 

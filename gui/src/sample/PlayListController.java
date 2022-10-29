@@ -15,6 +15,7 @@ import javafx.stage.Stage;
 import javafx.scene.control.TableView;
 
 import java.net.URL;
+import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.HashSet;
 import java.util.ResourceBundle;
@@ -88,6 +89,11 @@ public class PlayListController implements Initializable {
             }
         } catch (Exception e) {
             e.printStackTrace();
+            try {
+                PostgresSSH.connection.close();
+            } catch (SQLException throwables) {
+                throwables.printStackTrace();
+            }
         }
 
         // get playlist length
@@ -101,6 +107,11 @@ public class PlayListController implements Initializable {
             }
         } catch (Exception e) {
             e.printStackTrace();
+            try {
+                PostgresSSH.connection.close();
+            } catch (SQLException throwables) {
+                throwables.printStackTrace();
+            }
         }
 
         // convert seconds to minutes
@@ -121,6 +132,11 @@ public class PlayListController implements Initializable {
                 switchToPLDetailsScene(event);
             } catch (IOException e) {
                 e.printStackTrace();
+                try {
+                    PostgresSSH.connection.close();
+                } catch (SQLException throwables) {
+                    throwables.printStackTrace();
+                }
             }
         });
 
@@ -143,6 +159,11 @@ public class PlayListController implements Initializable {
                 st.executeUpdate(newPLQuery);
             } catch (Exception e) {
                 e.printStackTrace();
+                try {
+                    PostgresSSH.connection.close();
+                } catch (SQLException throwables) {
+                    throwables.printStackTrace();
+                }
             }
             // create view button
             Button button = new Button("View");
@@ -152,6 +173,11 @@ public class PlayListController implements Initializable {
                     switchToPLDetailsScene(event);
                 } catch (IOException e) {
                     e.printStackTrace();
+                    try {
+                        PostgresSSH.connection.close();
+                    } catch (SQLException throwables) {
+                        throwables.printStackTrace();
+                    }
                 }
             });
 //            PlayList newPlayList = new PlayList(newPLname.getText(), Model.self.getUsername(),
@@ -187,6 +213,11 @@ public class PlayListController implements Initializable {
             }
         } catch(Exception e) {
             e.printStackTrace();
+            try {
+                PostgresSSH.connection.close();
+            } catch (SQLException throwables) {
+                throwables.printStackTrace();
+            }
         }
 
         playlistTable.setItems(allPlayLists);

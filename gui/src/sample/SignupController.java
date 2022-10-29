@@ -109,6 +109,11 @@ public class SignupController {
             }
             } catch (Exception e) {
                 e.printStackTrace();
+                try {
+                    PostgresSSH.connection.close();
+                } catch (SQLException throwables) {
+                    throwables.printStackTrace();
+                }
             }
         }
     }
@@ -141,6 +146,11 @@ public class SignupController {
 
         } catch (Exception e) {
             e.printStackTrace();
+            try {
+                PostgresSSH.connection.close();
+            } catch (SQLException throwables) {
+                throwables.printStackTrace();
+            }
         }
         return null;
     }

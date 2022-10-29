@@ -20,6 +20,7 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.HashSet;
 import java.util.ResourceBundle;
@@ -84,6 +85,11 @@ public class AddAlbumController implements Initializable {
             }
         } catch(Exception e) {
             e.printStackTrace();
+            try {
+                PostgresSSH.connection.close();
+            } catch (SQLException throwables) {
+                throwables.printStackTrace();
+            }
         }
 
         // create add button
@@ -116,6 +122,11 @@ public class AddAlbumController implements Initializable {
                 }
             } catch (Exception exception) {
                 exception.printStackTrace();
+                try {
+                    PostgresSSH.connection.close();
+                } catch (SQLException throwables) {
+                    throwables.printStackTrace();
+                }
             }
             button.setDisable(true);
         } );
@@ -186,6 +197,11 @@ public class AddAlbumController implements Initializable {
 
         } catch (Exception e) {
             e.printStackTrace();
+            try {
+                PostgresSSH.connection.close();
+            } catch (SQLException throwables) {
+                throwables.printStackTrace();
+            }
         }
     }
 

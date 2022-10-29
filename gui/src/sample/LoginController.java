@@ -83,6 +83,11 @@ public class LoginController {
 
         } catch (Exception e) {
             e.printStackTrace();
+            try {
+                PostgresSSH.connection.close();
+            } catch (SQLException throwables) {
+                throwables.printStackTrace();
+            }
         }
         return null;
     }
@@ -128,21 +133,14 @@ public class LoginController {
                         }
                     }
                 }
- //               if (rs != null) {
- //                   while (rs.next()) {
-//                        if (rs.getInt(1) == 1) {
-//                            loginMessageLabel.setText("Welcome!");
-//                            User self = createSelf(usernameField.getText());
-//                            Model.setSelf(self);
- //                           switchToMainPageScene(event);
- //                       } else {
- //                           loginMessageLabel.setText("Invalid credentials. Try again.");
- //                       }
- //                   }
-//                }
 
             } catch (Exception e) {
                 e.printStackTrace();
+                try {
+                    PostgresSSH.connection.close();
+                } catch (SQLException throwables) {
+                    throwables.printStackTrace();
+                }
             }
         }
     }

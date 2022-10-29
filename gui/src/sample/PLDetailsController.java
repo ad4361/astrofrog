@@ -21,6 +21,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.sql.Date;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -139,6 +140,11 @@ public class PLDetailsController implements Initializable {
 
         } catch (Exception e) {
             e.printStackTrace();
+            try {
+                PostgresSSH.connection.close();
+            } catch (SQLException throwables) {
+                throwables.printStackTrace();
+            }
         }
         //INSERT INTO "UserSong" VALUES('fsowley5m', 774, now());
     }
@@ -159,6 +165,11 @@ public class PLDetailsController implements Initializable {
             switchtoPlaylistPage(e);
         } catch(Exception exception) {
             exception.printStackTrace();
+            try {
+                PostgresSSH.connection.close();
+            } catch (SQLException throwables) {
+                throwables.printStackTrace();
+            }
         }
     }
 
@@ -196,6 +207,11 @@ public class PLDetailsController implements Initializable {
 
         } catch (Exception e) {
             e.printStackTrace();
+            try {
+                PostgresSSH.connection.close();
+            } catch (SQLException throwables) {
+                throwables.printStackTrace();
+            }
         }
 
         // get album's name
@@ -210,6 +226,11 @@ public class PLDetailsController implements Initializable {
             }
         } catch (Exception e) {
             e.printStackTrace();
+            try {
+                PostgresSSH.connection.close();
+            } catch (SQLException throwables) {
+                throwables.printStackTrace();
+            }
         }
 
         // get listen count
@@ -222,6 +243,11 @@ public class PLDetailsController implements Initializable {
             }
         } catch (Exception e) {
             e.printStackTrace();
+            try {
+                PostgresSSH.connection.close();
+            } catch (SQLException throwables) {
+                throwables.printStackTrace();
+            }
         }
 
         Button button = new Button("❌");
@@ -236,6 +262,11 @@ public class PLDetailsController implements Initializable {
                 st.executeUpdate(removeQuery);
             } catch (Exception exception) {
                 exception.printStackTrace();
+                try {
+                    PostgresSSH.connection.close();
+                } catch (SQLException throwables) {
+                    throwables.printStackTrace();
+                }
             }
             button.setDisable(true);
         });
@@ -414,6 +445,11 @@ public class PLDetailsController implements Initializable {
 
         } catch (Exception e) {
             e.printStackTrace();
+            try {
+                PostgresSSH.connection.close();
+            } catch (SQLException throwables) {
+                throwables.printStackTrace();
+            }
         }
 
     }

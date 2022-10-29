@@ -22,6 +22,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.sql.Date;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
 import java.time.LocalDateTime;
 import java.util.ResourceBundle;
@@ -137,11 +138,13 @@ public class MainPageController implements Initializable {
             } else{
                 length = minutes + ":" + seconds;
             }
-
-
-
         } catch (Exception e) {
             e.printStackTrace();
+            try {
+                PostgresSSH.connection.close();
+            } catch (SQLException throwables) {
+                throwables.printStackTrace();
+            }
         }
 
         // get album's name
@@ -156,6 +159,11 @@ public class MainPageController implements Initializable {
             }
         } catch (Exception e) {
             e.printStackTrace();
+            try {
+                PostgresSSH.connection.close();
+            } catch (SQLException throwables) {
+                throwables.printStackTrace();
+            }
         }
 
         // get listen count
@@ -168,6 +176,11 @@ public class MainPageController implements Initializable {
             }
         } catch (Exception e) {
             e.printStackTrace();
+            try {
+                PostgresSSH.connection.close();
+            } catch (SQLException throwables) {
+                throwables.printStackTrace();
+            }
         }
 
         Button button = new Button("▷");
@@ -181,6 +194,11 @@ public class MainPageController implements Initializable {
                 st.executeUpdate(listenQuery);
             } catch (Exception exception) {
                 exception.printStackTrace();
+                try {
+                    PostgresSSH.connection.close();
+                } catch (SQLException throwables) {
+                    throwables.printStackTrace();
+                }
             }
         } );
 
@@ -326,6 +344,11 @@ public class MainPageController implements Initializable {
 
         } catch (Exception e) {
             e.printStackTrace();
+            try {
+                PostgresSSH.connection.close();
+            } catch (SQLException throwables) {
+                throwables.printStackTrace();
+            }
         }
 
     }

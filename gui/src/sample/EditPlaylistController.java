@@ -14,6 +14,7 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.HashSet;
 import java.util.ResourceBundle;
@@ -55,6 +56,11 @@ public class EditPlaylistController implements Initializable {
             }
         } catch (Exception e) {
             e.printStackTrace();
+            try {
+                PostgresSSH.connection.close();
+            } catch (SQLException throwables) {
+                throwables.printStackTrace();
+            }
         }
 
         if (newNameField.getText().isBlank()) {
@@ -74,6 +80,11 @@ public class EditPlaylistController implements Initializable {
                 switchToPLDetailsScene(event);
             } catch(Exception exception) {
                 exception.printStackTrace();
+                try {
+                    PostgresSSH.connection.close();
+                } catch (SQLException throwables) {
+                    throwables.printStackTrace();
+                }
             }
         }
     }
