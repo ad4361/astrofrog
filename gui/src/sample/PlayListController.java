@@ -66,6 +66,14 @@ public class PlayListController implements Initializable {
         stage.show();
     }
 
+    public void switchToProfileScene(ActionEvent event) throws IOException {
+        root = FXMLLoader.load(getClass().getResource("ProfilePage.fxml"));
+        stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        scene = new Scene(root);
+        stage.setScene(scene);
+        stage.show();
+    }
+
     public void switchToPLDetailsScene(ActionEvent event) throws IOException  {
         root = FXMLLoader.load(getClass().getResource("PLDetails.fxml"));
         stage = (Stage) ((Node) event.getSource()).getScene().getWindow();

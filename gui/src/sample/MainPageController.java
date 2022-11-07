@@ -108,6 +108,14 @@ public class MainPageController implements Initializable {
         stage.show();
     }
 
+    public void switchToProfileScene(ActionEvent event) throws IOException {
+        root = FXMLLoader.load(getClass().getResource("ProfilePage.fxml"));
+        stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        scene = new Scene(root);
+        stage.setScene(scene);
+        stage.show();
+    }
+
     public Song createSong(Integer songID, String username) {
 
         // get song title, releasedate, length, artistName, and genreName

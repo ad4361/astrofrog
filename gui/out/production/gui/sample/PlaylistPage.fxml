@@ -15,7 +15,7 @@
             <Font size="25.0" />
          </font>
       </Label>
-      <Button fx:id="BackButton" layoutX="14.0" layoutY="363.0" mnemonicParsing="false" onAction="#switchToMainPage" prefHeight="37.0" prefWidth="69.0" text="Back" />
+      <Button fx:id="BackButton" layoutX="89.0" layoutY="350.0" mnemonicParsing="false" onAction="#switchToMainPage" prefHeight="25.0" prefWidth="87.0" text="Main page" />
       <Label layoutX="222.0" layoutY="363.0" prefHeight="38.0" prefWidth="151.0" text="Create new playlist:">
          <font>
             <Font size="13.0" />
@@ -32,5 +32,7 @@
         </columns>
       </TableView>
       <TextField fx:id="newPLname" layoutX="341.0" layoutY="369.0" prefHeight="25.0" prefWidth="199.0" promptText="new playlist name" />
+      <Button fx:id="BackButton1" layoutX="89.0" layoutY="376.0" mnemonicParsing="false" onAction="#switchToProfileScene" prefHeight="25.0" prefWidth="87.0" text="My profile" />
+      <Label layoutX="11.0" layoutY="366.0" prefHeight="17.0" prefWidth="75.0" text="Go back to..." />
    </children>
 </AnchorPane>

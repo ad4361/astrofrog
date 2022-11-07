@@ -41,8 +41,8 @@ public class FollowingController implements Initializable {
 
     ObservableList<User> followingList = FXCollections.observableArrayList();
 
-    public void switchToMainPageScene(ActionEvent event) throws IOException {
-        root = FXMLLoader.load(getClass().getResource("MainPage.fxml"));
+    public void switchToProfileScene(ActionEvent event) throws IOException {
+        root = FXMLLoader.load(getClass().getResource("ProfilePage.fxml"));
         stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         scene = new Scene(root);
         stage.setScene(scene);
