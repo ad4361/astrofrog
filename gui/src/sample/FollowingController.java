@@ -17,9 +17,7 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.net.URL;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.ResourceBundle;
 
 public class FollowingController implements Initializable {
@@ -59,12 +57,14 @@ public class FollowingController implements Initializable {
 
     public void unfollow(String userFollowing, String userFollowed) {
 
-        String unfollowQuery = "DELETE FROM \"Follows\" WHERE \"userFollowing\" = '" +
-                userFollowing + "' AND \"userFollowed\" = '" + userFollowed + "'";
+        String unfollowQuery = "DELETE FROM \"Follows\" WHERE \"userFollowing\"=? AND \"userFollowed\"=?";
 
         try {
-            Statement st = PostgresSSH.connection.createStatement();
-            st.executeUpdate(unfollowQuery);
+            PreparedStatement statement = PostgresSSH.connection.prepareStatement(unfollowQuery);
+            statement.setString(1, userFollowing);
+            statement.setString(2, userFollowed);
+            statement.executeUpdate();
+
         } catch (Exception e) {
             e.printStackTrace();
             try {
@@ -79,12 +79,14 @@ public class FollowingController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
-        String viewFollowingQuery = "SELECT username, email FROM \"User\" WHERE username IN" +
-                "(SELECT \"userFollowed\" FROM \"Follows\" WHERE \"userFollowing\" = '" +
-                Model.self.getUsername() + "')";
+        String viewFollowingQuery = "SELECT username, email FROM \"User\" WHERE username IN " +
+                "(SELECT \"userFollowed\" FROM \"Follows\" WHERE \"userFollowing\" = ?)";
 
         try {
-            ResultSet rs = PostgresSSH.executeSelect(viewFollowingQuery);
+            PreparedStatement stmt = PostgresSSH.connection.prepareStatement(viewFollowingQuery);
+            stmt.setString(1, Model.self.getUsername());
+            ResultSet rs = stmt.executeQuery();
+
             while (rs.next()) {
                 String username = rs.getString("username");
                 String email = rs.getString("email");
@@ -115,11 +117,7 @@ public class FollowingController implements Initializable {
 
                     String searchKeyword = newValue.toLowerCase();
 
-                    if (User.getEmail().toLowerCase().indexOf(searchKeyword) > -1) {
-                        return true;
-                    } else {
-                        return false;
-                    }
+                    return User.getEmail().toLowerCase().contains(searchKeyword);
                 });
             });
 

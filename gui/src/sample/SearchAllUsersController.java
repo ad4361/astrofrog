@@ -17,9 +17,9 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.net.URL;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.HashSet;
 import java.util.ResourceBundle;
 import java.util.Set;
@@ -55,12 +55,14 @@ public class SearchAllUsersController implements Initializable {
 
     public void unfollow(String userFollowing, String userFollowed) {
 
-        String unfollowQuery = "DELETE FROM \"Follows\" WHERE \"userFollowing\" = '" +
-                userFollowing + "' AND \"userFollowed\" = '" + userFollowed + "'";
+        String unfollowQuery = "DELETE FROM \"Follows\" WHERE \"userFollowing\"=? AND \"userFollowed\"=?";
 
         try {
-            Statement st = PostgresSSH.connection.createStatement();
-            st.executeUpdate(unfollowQuery);
+            PreparedStatement statement = PostgresSSH.connection.prepareStatement(unfollowQuery);
+            statement.setString(1, userFollowing);
+            statement.setString(2, userFollowed);
+            statement.executeUpdate();
+
         } catch (Exception e) {
             e.printStackTrace();
             try {
@@ -73,12 +75,14 @@ public class SearchAllUsersController implements Initializable {
 
     public void follow(String userFollowing, String userFollowed) {
 
-        String followQuery = "INSERT INTO \"Follows\" VALUES ('" + userFollowing + "', '" +
-                userFollowed + "')";
+        String followQuery = "INSERT INTO \"Follows\" VALUES (?, ?)";
 
         try {
-            Statement st = PostgresSSH.connection.createStatement();
-            st.executeUpdate(followQuery);
+            PreparedStatement statement = PostgresSSH.connection.prepareStatement(followQuery);
+            statement.setString(1, userFollowing);
+            statement.setString(2, userFollowed);
+            statement.executeUpdate();
+
         } catch (Exception e) {
             e.printStackTrace();
             try {
@@ -94,30 +98,34 @@ public class SearchAllUsersController implements Initializable {
 
         String countUsersQuery = "SELECT COUNT(*) FROM \"User\"";
 
-        String viewAllUsersQuery = "SELECT username, email FROM \"User\" WHERE username != '"
-                + Model.self.getUsername() + "'" ;
+        String viewAllUsersQuery = "SELECT username, email FROM \"User\" WHERE username != ?";
 
-        String viewWhoIFollowQuery = "SELECT username FROM \"User\" WHERE username IN" +
-                "(SELECT \"userFollowed\" FROM \"Follows\" WHERE \"userFollowing\" = '" +
-                Model.self.getUsername() + "')";
+        String viewWhoIFollowQuery = "SELECT username, email FROM \"User\" WHERE username IN " +
+                "(SELECT \"userFollowed\" FROM \"Follows\" WHERE \"userFollowing\" = ?)";
 
         try {
+            PreparedStatement stmt1 = PostgresSSH.connection.prepareStatement(countUsersQuery);
+            ResultSet rsCount = stmt1.executeQuery();
 
-            ResultSet rsCount = PostgresSSH.executeSelect(countUsersQuery);
             while(rsCount.next()) {
-                Integer count = rsCount.getInt(1);
+                int count = rsCount.getInt(1);
                 totalUsersLabel.setText("Total users: " + count);
             }
 
             Set<String> whoIFollowSet = new HashSet<>();
 
-            ResultSet rs2 = PostgresSSH.executeSelect(viewWhoIFollowQuery);
+            PreparedStatement stmt2 = PostgresSSH.connection.prepareStatement(viewWhoIFollowQuery);
+            stmt2.setString(1, Model.self.getUsername());
+            ResultSet rs2 = stmt2.executeQuery();
             while (rs2.next()) {
                 String username = rs2.getString("username");
                 whoIFollowSet.add(username);
             }
 
-            ResultSet rs = PostgresSSH.executeSelect(viewAllUsersQuery);
+
+            PreparedStatement stmt3 = PostgresSSH.connection.prepareStatement(viewAllUsersQuery);
+            stmt3.setString(1, Model.self.getUsername());
+            ResultSet rs = stmt3.executeQuery();
             while (rs.next()) {
                 String username = rs.getString("username");
                 String email = rs.getString("email");
@@ -158,11 +166,7 @@ public class SearchAllUsersController implements Initializable {
 
                     String searchKeyword = newValue.toLowerCase();
 
-                    if (User.getEmail().toLowerCase().indexOf(searchKeyword) > -1) {
-                        return true;
-                    } else {
-                        return false;
-                    }
+                    return User.getEmail().toLowerCase().contains(searchKeyword);
                 });
             });
 

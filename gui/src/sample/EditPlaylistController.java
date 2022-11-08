@@ -13,9 +13,7 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.net.URL;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.HashSet;
 import java.util.ResourceBundle;
 import java.util.Set;
@@ -44,12 +42,13 @@ public class EditPlaylistController implements Initializable {
     public void changeName(ActionEvent event) {
         Set<String> existingPLnames = new HashSet<>();
 
-        String getPlaylistsQuery = "SELECT plname FROM \"Playlist\" WHERE username = '" +
-                Model.self.getUsername() + "' ORDER BY plname ASC";
+        String getPlaylistsQuery = "SELECT plname FROM \"Playlist\" WHERE username=? ORDER BY plname ASC";
         String plname = null;
 
         try {
-            ResultSet rs = PostgresSSH.executeSelect(getPlaylistsQuery);
+            PreparedStatement stmt = PostgresSSH.connection.prepareStatement(getPlaylistsQuery);
+            stmt.setString(1, Model.self.getUsername());
+            ResultSet rs = stmt.executeQuery();
             while (rs.next()) {
                 plname = rs.getString("plname");
                 existingPLnames.add(plname);
@@ -69,13 +68,15 @@ public class EditPlaylistController implements Initializable {
         else if (existingPLnames.contains(newNameField.getText())) {
             warningMessageLabel.setText("You already have a playlist with that name");
         } else {
-            String renameQuery = "UPDATE \"Playlist\" " +
-                    "SET plname = '" + newNameField.getText() + "' " +
-                    "WHERE plname = '" + Model.PLname + "' AND username = '" +
-                     Model.self.getUsername() + "'";
+            String renameQuery = "UPDATE \"Playlist\" SET plname = ? WHERE plname = ? AND username = ?";
             try {
-                Statement st = PostgresSSH.connection.createStatement();
-                st.executeUpdate(renameQuery);
+
+                PreparedStatement st = PostgresSSH.connection.prepareStatement(renameQuery);
+                st.setString(1, newNameField.getText());
+                st.setString(2, Model.PLname);
+                st.setString(3, Model.self.getUsername());
+
+                st.executeUpdate();
                 Model.setPlname(newNameField.getText());
                 switchToPLDetailsScene(event);
             } catch(Exception exception) {

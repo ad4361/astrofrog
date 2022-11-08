@@ -17,9 +17,7 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.net.URL;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.HashSet;
 import java.util.ResourceBundle;
 import java.util.Set;
@@ -53,12 +51,14 @@ public class FollowersController implements Initializable {
 
     public void unfollow(String userFollowing, String userFollowed) {
 
-        String unfollowQuery = "DELETE FROM \"Follows\" WHERE \"userFollowing\" = '" +
-                userFollowing + "' AND \"userFollowed\" = '" + userFollowed + "'";
+        String unfollowQuery = "DELETE FROM \"Follows\" WHERE \"userFollowing\"=? AND \"userFollowed\"=?";
 
         try {
-            Statement st = PostgresSSH.connection.createStatement();
-            st.executeUpdate(unfollowQuery);
+            PreparedStatement statement = PostgresSSH.connection.prepareStatement(unfollowQuery);
+            statement.setString(1, userFollowing);
+            statement.setString(2, userFollowed);
+            statement.executeUpdate();
+
         } catch (Exception e) {
             e.printStackTrace();
             try {
@@ -71,12 +71,14 @@ public class FollowersController implements Initializable {
 
     public void follow(String userFollowing, String userFollowed) {
 
-        String followQuery = "INSERT INTO \"Follows\" VALUES ('" + userFollowing + "', '" +
-                userFollowed + "')";
+        String followQuery = "INSERT INTO \"Follows\" VALUES (?, ?)";
 
         try {
-            Statement st = PostgresSSH.connection.createStatement();
-            st.executeUpdate(followQuery);
+            PreparedStatement statement = PostgresSSH.connection.prepareStatement(followQuery);
+            statement.setString(1, userFollowing);
+            statement.setString(2, userFollowed);
+            statement.executeUpdate();
+
         } catch (Exception e) {
             e.printStackTrace();
             try {
@@ -91,23 +93,25 @@ public class FollowersController implements Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
         String viewFollowersQuery = "SELECT username, email FROM \"User\" WHERE username IN" +
-                "(SELECT \"userFollowing\" FROM \"Follows\" WHERE \"userFollowed\" = '" +
-                Model.self.getUsername() + "')";
+                "(SELECT \"userFollowing\" FROM \"Follows\" WHERE \"userFollowed\" = ?)";
 
-        String viewWhoIFollowQuery = "SELECT username FROM \"User\" WHERE username IN" +
-                "(SELECT \"userFollowed\" FROM \"Follows\" WHERE \"userFollowing\" = '" +
-                Model.self.getUsername() + "')";
+        String viewWhoIFollowQuery = "SELECT username, email FROM \"User\" WHERE username IN " +
+                "(SELECT \"userFollowed\" FROM \"Follows\" WHERE \"userFollowing\" = ?)";
 
         try {
             Set<String> whoIFollowSet = new HashSet<>();
 
-            ResultSet rs2 = PostgresSSH.executeSelect(viewWhoIFollowQuery);
+            PreparedStatement stmt = PostgresSSH.connection.prepareStatement(viewWhoIFollowQuery);
+            stmt.setString(1, Model.self.getUsername());
+            ResultSet rs2 = stmt.executeQuery();
             while (rs2.next()) {
                 String username = rs2.getString("username");
                 whoIFollowSet.add(username);
             }
 
-            ResultSet rs = PostgresSSH.executeSelect(viewFollowersQuery);
+            PreparedStatement statement = PostgresSSH.connection.prepareStatement(viewFollowersQuery);
+            statement.setString(1, Model.self.getUsername());
+            ResultSet rs = statement.executeQuery();
 
             while (rs.next()) {
                 String username = rs.getString("username");
@@ -149,11 +153,7 @@ public class FollowersController implements Initializable {
 
                     String searchKeyword = newValue.toLowerCase();
 
-                    if (User.getEmail().toLowerCase().indexOf(searchKeyword) > -1) {
-                        return true;
-                    } else {
-                        return false;
-                    }
+                    return User.getEmail().toLowerCase().contains(searchKeyword);
                 });
             });
 
