@@ -3,11 +3,9 @@ package sample;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
@@ -16,10 +14,7 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.math.BigInteger;
 import java.security.MessageDigest;
-import java.sql.Date;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.time.LocalDateTime;
 
 public class LoginController {
@@ -28,10 +23,6 @@ public class LoginController {
     private Scene scene;
     private Parent root;
 
-    @FXML
-    private Button loginButton;
-    @FXML
-    private Button goBackButton;
     @FXML
     private TextField usernameField;
     @FXML
@@ -56,9 +47,11 @@ public class LoginController {
     }
 
     public User createSelf(String username) {
-        String query = "SELECT * FROM \"User\" WHERE username = '" + username + "'";
+        String query = "SELECT * FROM \"User\" WHERE username=?";
         try {
-            ResultSet rs = PostgresSSH.executeSelect(query);
+            PreparedStatement stmt = PostgresSSH.connection.prepareStatement(query);
+            stmt.setString(1, username);
+            ResultSet rs = stmt.executeQuery();
             String uname = null, firstname = null, lastname = null, email = null;
             Date dob = null, creationDate = null;
             LocalDateTime lastAccessDate = null;
@@ -73,9 +66,11 @@ public class LoginController {
             }
 
             // need to update lastAccessDate in db
-            Statement st = PostgresSSH.connection.createStatement();
-            String updateAccess = "UPDATE \"User\" SET LASTACCESSDATE = '" +lastAccessDate+ "' WHERE username = '" + username + "'";
-            int newTime = st.executeUpdate(updateAccess);
+            String updateAccess = "UPDATE \"User\" SET LASTACCESSDATE = ? WHERE username = ?";
+            PreparedStatement statement = PostgresSSH.connection.prepareStatement(updateAccess);
+            statement.setTimestamp(1, Timestamp.valueOf(lastAccessDate));
+            statement.setString(2, username);
+            int newTime = statement.executeUpdate();
             if (newTime < 1) {
                 System.out.println("Did not work, check the statement or if the user exists!");
             }
@@ -99,11 +94,11 @@ public class LoginController {
         } else {
 
             try {
-                // implement db security stuff
-                String anotherquery = "SELECT USERNAME, SALT, HASHEDPASS FROM \"User\" WHERE username = '" +
-                        usernameField.getText() + "'";
+                String anotherquery = "SELECT USERNAME, SALT, HASHEDPASS FROM \"User\" WHERE username=?";
+                PreparedStatement stmt = PostgresSSH.connection.prepareStatement(anotherquery);
+                stmt.setString(1, usernameField.getText());
+                ResultSet test = stmt.executeQuery();
 
-                ResultSet test = PostgresSSH.executeSelect(anotherquery);
                 if (test != null) {
                     while (test.next()) {
                         if (test.getString("salt") != null) {

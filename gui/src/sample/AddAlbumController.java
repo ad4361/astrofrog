@@ -67,7 +67,7 @@ public class AddAlbumController implements Initializable {
 
     public Album createAlbum(Integer albumID, String username) {
 
-        // get albumname
+        // get albumname TODO UPDATE FOR GENRE
         String getAlbumArtistGenreQuery = "SELECT A.albumname, AF.\"artistName\", AG.genre " +
                 "FROM \"Album\" A, \"AlbumFeat\" AF, \"AlbumGenre\" AG " +
                 "WHERE A.albumid = AF.albumid AND AF.albumid = AG.albumid " +

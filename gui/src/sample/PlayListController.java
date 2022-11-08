@@ -1,7 +1,5 @@
 package sample;
 
-import com.sun.webkit.Timer;
-import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;

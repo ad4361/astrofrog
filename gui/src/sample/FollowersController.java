@@ -1,6 +1,5 @@
 package sample;
 
-import javafx.beans.Observable;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
@@ -90,10 +89,6 @@ public class FollowersController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-
-        /*SELECT username, email FROM "User"
-        WHERE username IN (SELECT "userFollowing" from "Follows"
-                WHERE "userFollowed" = 'hhutcheonsjl');*/
 
         String viewFollowersQuery = "SELECT username, email FROM \"User\" WHERE username IN" +
                 "(SELECT \"userFollowing\" FROM \"Follows\" WHERE \"userFollowed\" = '" +

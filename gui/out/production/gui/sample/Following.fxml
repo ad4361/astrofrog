@@ -15,7 +15,7 @@
                 <Font size="25.0" />
             </font>
         </Label>
-        <Button fx:id="goBackButton" layoutX="14.0" layoutY="376.0" mnemonicParsing="false" onAction="#switchToMainPageScene" prefHeight="37.0" prefWidth="69.0" text="Go back" />
+        <Button fx:id="goBackButton" layoutX="14.0" layoutY="376.0" mnemonicParsing="false" onAction="#switchToProfileScene" prefHeight="37.0" prefWidth="69.0" text="Go back" />
         <Label layoutX="263.0" layoutY="28.0" prefHeight="38.0" prefWidth="151.0" text="Search for user:">
             <font>
                 <Font size="17.0" />
@@ -35,6 +35,5 @@
          </font>
       </Label>
       <Button fx:id="goBackButton1" layoutX="533.0" layoutY="376.0" mnemonicParsing="false" onAction="#switchToSearchAllUsersScene" prefHeight="37.0" prefWidth="125.0" text="Search ALL users" />
-      <Label fx:id="loadingMusicLabel" layoutX="96.0" layoutY="386.0" prefHeight="17.0" prefWidth="175.0" />
     </children>
 </AnchorPane>

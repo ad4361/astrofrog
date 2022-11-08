@@ -12,10 +12,7 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.math.BigInteger;
 import java.security.MessageDigest;
-import java.sql.Date;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.time.LocalDateTime;
 
 public class SignupController {
@@ -24,8 +21,6 @@ public class SignupController {
     private Scene scene;
     private Parent root;
 
-    @FXML
-    private Button signupButton;
     @FXML
     private TextField usernameField;
     @FXML
@@ -57,16 +52,18 @@ public class SignupController {
         stage.show();
     }
 
-    public void signup(ActionEvent event) throws IOException, SQLException {
+    public void signup(ActionEvent event) {
         if (usernameField.getText().isBlank() || passwordField.getText().isBlank() || firstNameField.getText().isBlank()
         || lastNameField.getText().isBlank() || dobField.getValue() == null || emailField.getText().isBlank()) {
             warningLabel.setText("Please enter all information.");
         }
         else {
             try {
-            String queryUsernameAvailable = "SELECT count(1) FROM \"User\" WHERE username = '" +
-                    usernameField.getText()+"'";
-            ResultSet rs = PostgresSSH.executeSelect(queryUsernameAvailable);
+            String queryUsernameAvailable = "SELECT count(1) FROM \"User\" WHERE username=?";
+            PreparedStatement stmt = PostgresSSH.connection.prepareStatement(queryUsernameAvailable);
+            stmt.setString(1, usernameField.getText());
+            ResultSet rs = stmt.executeQuery();
+
             if (rs != null) {
                 while (rs.next()) {
                     if (rs.getInt(1) == 1) {
@@ -95,12 +92,22 @@ public class SignupController {
                         md.update(toHash.getBytes());
                         BigInteger hash = new BigInteger(1, md.digest());
                         String hashedPass = hash.toString(16);
-                        Statement st = PostgresSSH.connection.createStatement();
-                        String query = "INSERT INTO \"User\" (username, firstname, lastname, dob, email, creationdate, lastaccessdate," +
-                                " salt, hashedpass) VALUES ('" +usernameField.getText()+"' , '" +firstNameField.getText()+"' , '"
-                                +lastNameField.getText()+"', '"+dobField.getValue()+"', '"+emailField.getText()+"' ,'"+
-                                LocalDateTime.now()+"', '"+LocalDateTime.now()+"', '"+salt+"', '"+hashedPass+"')";
-                        st.executeUpdate(query);
+
+                        String insertQuery = "INSERT INTO \"User\" (username, firstname, lastname, dob, email, creationdate, lastaccessdate," +
+                                " salt, hashedpass) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+
+                        PreparedStatement statement = PostgresSSH.connection.prepareStatement(insertQuery);
+                        statement.setString(1, usernameField.getText());
+                        statement.setString(2, firstNameField.getText());
+                        statement.setString(3, lastNameField.getText());
+                        statement.setDate(4, Date.valueOf(dobField.getValue()));
+                        statement.setString(5, emailField.getText());
+                        statement.setTimestamp(6, Timestamp.valueOf(LocalDateTime.now()));
+                        statement.setTimestamp(7, Timestamp.valueOf(LocalDateTime.now()));
+                        statement.setString(8, salt);
+                        statement.setString(9, hashedPass);
+                        statement.executeUpdate();
+
                         User self = createSelf(usernameField.getText());
                         Model.setSelf(self);
                         switchToMainPageScene(event);
@@ -119,9 +126,11 @@ public class SignupController {
     }
 
     public User createSelf(String username) {
-        String query = "SELECT * FROM \"User\" WHERE username = '" + username + "'";
+        String query = "SELECT * FROM \"User\" WHERE username=?";
         try {
-            ResultSet rs = PostgresSSH.executeSelect(query);
+            PreparedStatement stmt = PostgresSSH.connection.prepareStatement(query);
+            stmt.setString(1, username);
+            ResultSet rs = stmt.executeQuery();
             String uname = null, firstname = null, lastname = null, email = null;
             Date dob = null, creationDate = null;
             LocalDateTime lastAccessDate = null;
@@ -136,9 +145,11 @@ public class SignupController {
             }
 
             // need to update lastAccessDate in db
-            Statement st = PostgresSSH.connection.createStatement();
-            String updateAccess = "UPDATE \"User\" SET LASTACCESSDATE = '" +lastAccessDate+ "' WHERE username = '" + username + "'";
-            int newTime = st.executeUpdate(updateAccess);
+            String updateAccess = "UPDATE \"User\" SET LASTACCESSDATE = ? WHERE username = ?";
+            PreparedStatement statement = PostgresSSH.connection.prepareStatement(updateAccess);
+            statement.setTimestamp(1, Timestamp.valueOf(lastAccessDate));
+            statement.setString(2, username);
+            int newTime = statement.executeUpdate();
             if (newTime < 1) {
                 System.out.println("Did not work, check the statement or if the user exists!");
             }

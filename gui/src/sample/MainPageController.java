@@ -1,6 +1,5 @@
 package sample;
 
-import com.sun.webkit.Timer;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
@@ -76,22 +75,6 @@ public class MainPageController implements Initializable {
         switchToWelcomeScene(event);
     }
 
-    public void switchToFollowersScene(ActionEvent event) throws IOException {
-        root = FXMLLoader.load(getClass().getResource("Followers.fxml"));
-        stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        scene = new Scene(root);
-        stage.setScene(scene);
-        stage.show();
-    }
-
-    public void switchToFollowingScene(ActionEvent event) throws IOException {
-        root = FXMLLoader.load(getClass().getResource("Following.fxml"));
-        stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        scene = new Scene(root);
-        stage.setScene(scene);
-        stage.show();
-    }
-
     public void switchToPlaylistScene(ActionEvent event) throws IOException {
         root = FXMLLoader.load(getClass().getResource("PlaylistPage.fxml"));
         stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
@@ -119,6 +102,7 @@ public class MainPageController implements Initializable {
     public Song createSong(Integer songID, String username) {
 
         // get song title, releasedate, length, artistName, and genreName
+        // TODO GENRE CHANGE
         String getTitleDateLengthArtistGenre = "SELECT S.title, S.releasedate, S.length, SG.\"genreName\", " +
                 "SF.artname FROM \"Song\" S, \"SongGenre\" SG, \"SongFeat\" SF " +
                 "WHERE S.songID = SG.\"songID\" AND SG.\"songID\" = SF.\"songID\" " +

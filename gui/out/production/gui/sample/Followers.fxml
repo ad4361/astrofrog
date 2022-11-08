@@ -15,7 +15,7 @@
                 <Font size="25.0" />
             </font>
         </Label>
-        <Button fx:id="goBackButton" layoutX="14.0" layoutY="376.0" mnemonicParsing="false" onAction="#switchToMainPageScene" prefHeight="37.0" prefWidth="69.0" text="Go back" />
+        <Button fx:id="goBackButton" layoutX="14.0" layoutY="376.0" mnemonicParsing="false" onAction="#switchToProfileScene" prefHeight="37.0" prefWidth="69.0" text="Go back" />
         <Label layoutX="291.0" layoutY="32.0" prefHeight="38.0" prefWidth="151.0" text="Search for user:">
             <font>
                 <Font size="17.0" />
