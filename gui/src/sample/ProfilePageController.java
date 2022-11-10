@@ -12,6 +12,9 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.net.URL;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ResourceBundle;
 
 public class ProfilePageController implements Initializable {
@@ -67,17 +70,46 @@ public class ProfilePageController implements Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
         usernameLabel.setText(Model.self.getUsername());
 
-        // get COUNT of playlists
-        int playlists = 0;
-        playlistLabel.setText("Playlists: " + playlists);
+        String countPlaylists = "SELECT COUNT(*) FROM \"Playlist\" WHERE username = ?";
+        String countFollowers = "SELECT COUNT(*) FROM \"Follows\" WHERE \"userFollowed\" = ?";
+        String countFollowing = "SELECT COUNT(*) FROM \"Follows\" WHERE \"userFollowing\" = ?";
 
-        // get COUNT of followers
-        int followers = 0;
-        followersLabel.setText("Followers: " + followers);
+        int playlists;
+        int followers;
+        int following;
 
-        // get COUNT of following
-        int following = 0;
-        followingLabel.setText("Following: " + following);
+        try {
+            PreparedStatement stmt1 = PostgresSSH.connection.prepareStatement(countPlaylists);
+            stmt1.setString(1, Model.self.getUsername());
+            ResultSet rsPlaylist = stmt1.executeQuery();
+            while(rsPlaylist.next()) {
+                playlists = rsPlaylist.getInt(1);
+                playlistLabel.setText("Playlists: " + playlists);
+            }
 
+            PreparedStatement stmt2 = PostgresSSH.connection.prepareStatement(countFollowers);
+            stmt2.setString(1, Model.self.getUsername());
+            ResultSet rsFollowers = stmt2.executeQuery();
+            while(rsFollowers.next()) {
+                followers = rsFollowers.getInt(1);
+                followersLabel.setText("Followers: " + followers);
+            }
+
+            PreparedStatement stmt3 = PostgresSSH.connection.prepareStatement(countFollowing);
+            stmt3.setString(1, Model.self.getUsername());
+            ResultSet rsFollowing = stmt3.executeQuery();
+            while(rsFollowing.next()) {
+                following = rsFollowing.getInt(1);
+                followingLabel.setText("Following: " + following);
+            }
+
+        } catch(Exception e) {
+            e.printStackTrace();
+            try {
+                PostgresSSH.connection.close();
+            } catch (SQLException throwables) {
+                throwables.printStackTrace();
+            }
+        }
     }
 }

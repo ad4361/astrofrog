@@ -87,7 +87,7 @@ public class LoginController {
         return null;
     }
 
-    public void login(ActionEvent event) throws IOException, SQLException {
+    public void login(ActionEvent event) {
 
         if (usernameField.getText().isBlank() || passwordField.getText().isBlank()) {
             loginMessageLabel.setText("Please enter username and password.");
