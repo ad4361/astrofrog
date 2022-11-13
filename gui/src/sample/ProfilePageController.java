@@ -8,6 +8,7 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
+import javafx.scene.control.ListView;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -31,6 +32,9 @@ public class ProfilePageController implements Initializable {
     private Label followersLabel;
     @FXML
     private Label followingLabel;
+    @FXML
+    private ListView<String> top10ListView;
+
 
 
     public void switchToFollowersScene(ActionEvent event) throws IOException {
@@ -111,5 +115,49 @@ public class ProfilePageController implements Initializable {
                 throwables.printStackTrace();
             }
         }
+
+        // find top 10 artists
+        String top10Query = "SELECT BIGETC.artname, SUM(BIGETC.sum) " +
+                "FROM " +
+                    "(SELECT SF.artname, ETC.sum " +
+                    "FROM \"SongFeat\" AS SF, " +
+                        "(SELECT \"songID\", SUM(count) as sum " +
+                        "FROM (SELECT \"songID\", COUNT(*) AS count " +
+                        "FROM \"PLContains\" " +
+                        "WHERE username = ? " +
+                        "GROUP BY \"PLContains\".\"songID\" " +
+                        "UNION ALL " +
+                        "SELECT \"songID\", COUNT(*) AS count " +
+                        "FROM \"UserSong\" " +
+                        "WHERE username = ? " +
+                        "GROUP BY  \"UserSong\".\"songID\") as sIcsIc " +
+                    "GROUP BY \"songID\") AS ETC " +
+                    "WHERE SF.\"songID\" = ETC.\"songID\" " +
+                    "ORDER BY SF.\"songID\") AS BIGETC " +
+                "GROUP BY BIGETC.artname " +
+                "ORDER BY 2 DESC " +
+                "LIMIT 10";
+
+        try {
+            PreparedStatement stmt4 = PostgresSSH.connection.prepareStatement(top10Query);
+            stmt4.setString(1, Model.self.getUsername());
+            stmt4.setString(2, Model.self.getUsername());
+            ResultSet rsTop10 = stmt4.executeQuery();
+            int i = 1;
+            while (rsTop10.next()) {
+                String artistName = rsTop10.getString(1);
+                top10ListView.getItems().add(i + ". " + artistName);
+                i++;
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            try {
+                PostgresSSH.connection.close();
+            } catch (SQLException throwables) {
+                throwables.printStackTrace();
+            }
+        }
+
     }
 }

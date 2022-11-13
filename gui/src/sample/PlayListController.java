@@ -87,7 +87,7 @@ public class PlayListController implements Initializable {
 
         // get number of songs in playlist
         String getNum = "SELECT COUNT(*) FROM \"PLContains\" WHERE \"username\" = '" +
-                username + "' AND \"plNAME\"= '" + plname + "' AND \"songID\" BETWEEN 1 AND 300";
+                username + "' AND \"plNAME\"= '" + plname + "'";
         try {
             ResultSet plNum = PostgresSSH.executeSelect(getNum);
             while (plNum.next()) {
@@ -105,7 +105,7 @@ public class PlayListController implements Initializable {
         // get playlist length
         String getLength = "SELECT SUM(length) FROM \"Song\" WHERE songID IN " +
                 "(SELECT \"songID\" FROM \"PLContains\" WHERE \"plNAME\" = '" + plname +
-                "' AND username = '" + username + "' AND \"songID\" BETWEEN 1 AND 300)";
+                "' AND username = '" + username + "')";
         try {
             ResultSet plLen = PostgresSSH.executeSelect(getLength);
             while (plLen.next()) {
@@ -186,8 +186,7 @@ public class PlayListController implements Initializable {
                     }
                 }
             });
-//            PlayList newPlayList = new PlayList(newPLname.getText(), Model.self.getUsername(),
-//                    "0", 0, button);
+
             Model.setPlname(newPLname.getText());
             switchToPLDetailsScene(actionEvent);
         }

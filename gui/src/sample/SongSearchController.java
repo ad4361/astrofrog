@@ -68,7 +68,7 @@ public class SongSearchController implements Initializable {
     String sortOrderChoice = "ASC";
     String query = "SELECT S.songID " +
             "FROM \"Song\" S, \"SongFeat\" SF " +
-            "WHERE S.songID = SF.\"songID\" AND S.songID BETWEEN 1 AND 300" +
+            "WHERE S.songID = SF.\"songID\" " +
             "ORDER BY S.title, SF.artname ASC";
 
     public void switchToPLDetailsScene(ActionEvent event) throws IOException  {
@@ -82,9 +82,9 @@ public class SongSearchController implements Initializable {
     public Song createSong(Integer songID, String username) {
 
         // get song title, releasedate, length, artistName, and genreName
-        String getTitleDateLengthArtistGenre = "SELECT S.title, S.releasedate, S.length, SG.\"genreName\", " +
-                "SF.artname FROM \"Song\" S, \"SongGenre\" SG, \"SongFeat\" SF " +
-                "WHERE S.songID = SG.\"songID\" AND SG.\"songID\" = SF.\"songID\" " +
+        String getTitleDateLengthArtistGenre = "SELECT S.title, S.releasedate, S.length, G.name, " +
+                "SF.artname FROM \"Song\" S, \"SongGenre\" SG, \"SongFeat\" SF, \"Genre\" G " +
+                "WHERE S.songID = SG.\"songID\" AND SG.\"songID\" = SF.\"songID\" AND SG.\"genreID\" = G.\"genreID\" " +
                 "AND S.songID = " + songID;
         String title = null;
         Date releasedate = null;
@@ -99,8 +99,8 @@ public class SongSearchController implements Initializable {
                 title = songInfo.getString("title");
                 releasedate = songInfo.getDate("releasedate");
                 ilength = songInfo.getInt("length");
+                genreName = songInfo.getString("name");
                 artistName = songInfo.getString("artname");
-                genreName = songInfo.getString("genreName");
             }
             int minutes = ilength / 60;
             int seconds = (int) (ilength -(minutes*60));
@@ -109,9 +109,6 @@ public class SongSearchController implements Initializable {
             } else{
                 length = minutes + ":" + seconds;
             }
-
-
-
         } catch (Exception e) {
             e.printStackTrace();
             try {
@@ -213,29 +210,28 @@ public class SongSearchController implements Initializable {
                     if (this.sortChoice.equals("Song")) {
                         this.query = "SELECT S.songID " +
                                 "FROM \"Song\" S, \"SongFeat\" SF " +
-                                "WHERE S.songID = SF.\"songID\" AND S.songID BETWEEN 1 AND 300" +
+                                "WHERE S.songID = SF.\"songID\" " +
                                 "ORDER BY S.title " + this.sortOrderChoice + ", SF.artname ASC";
                         allSongsList.clear();
                         runQuery(query);
                     } else if (this.sortChoice.equals("Year")) {
                         this.query = "SELECT S.songID " +
                                 "FROM \"Song\" S " +
-                                "WHERE S.songID BETWEEN 1 AND 300" +
                                 "ORDER BY S.releasedate " + this.sortOrderChoice;
                         allSongsList.clear();
                         runQuery(query);
                     } else if (this.sortChoice.equals("Artist")) {
                         this.query = "SELECT S.songID " +
                                 "FROM \"Song\" S, \"SongFeat\" SF " +
-                                "WHERE S.songID = SF.\"songID\" AND S.songID BETWEEN 1 AND 300" +
+                                "WHERE S.songID = SF.\"songID\" " +
                                 "ORDER BY  SF.artname " + this.sortOrderChoice;
                         allSongsList.clear();
                         runQuery(query);
                     } else if (this.sortChoice.equals("Genre")) {
                         this.query = "SELECT S.songID " +
-                                "FROM \"Song\" S, \"SongGenre\" SG " +
-                                "WHERE S.songID = SG.\"songID\" AND S.songID BETWEEN 1 AND 300" +
-                                "ORDER BY  SG.\"genreName\" " + this.sortOrderChoice;
+                                "FROM \"Song\" S, \"SongGenre\" SG, \"Genre\" G " +
+                                "WHERE S.songID = SG.\"songID\" AND SG.\"genreID\" = G.\"genreID\" " +
+                                "ORDER BY  G.name " + this.sortOrderChoice;
                         allSongsList.clear();
                         runQuery(query);
                     }
@@ -250,29 +246,28 @@ public class SongSearchController implements Initializable {
                     if (this.sortChoice.equals("Song")) {
                         this.query = "SELECT S.songID " +
                                 "FROM \"Song\" S, \"SongFeat\" SF " +
-                                "WHERE S.songID = SF.\"songID\" AND S.songID BETWEEN 1 AND 300" +
+                                "WHERE S.songID = SF.\"songID\" " +
                                 "ORDER BY S.title " + this.sortOrderChoice + ", SF.artname ASC";
                         allSongsList.clear();
                         runQuery(query);
                     } else if (this.sortChoice.equals("Year")) {
                         this.query = "SELECT S.songID " +
                                 "FROM \"Song\" S " +
-                                "WHERE S.songID BETWEEN 1 AND 300" +
                                 "ORDER BY S.releasedate " + this.sortOrderChoice;
                         allSongsList.clear();
                         runQuery(query);
                     } else if (this.sortChoice.equals("Artist")) {
                         this.query = "SELECT S.songID " +
                                 "FROM \"Song\" S, \"SongFeat\" SF " +
-                                "WHERE S.songID = SF.\"songID\" AND S.songID BETWEEN 1 AND 300" +
+                                "WHERE S.songID = SF.\"songID\" " +
                                 "ORDER BY  SF.artname " + this.sortOrderChoice;
                         allSongsList.clear();
                         runQuery(query);
                     } else if (this.sortChoice.equals("Genre")) {
                         this.query = "SELECT S.songID " +
-                                "FROM \"Song\" S, \"SongGenre\" SG " +
-                                "WHERE S.songID = SG.\"songID\" AND S.songID BETWEEN 1 AND 300" +
-                                "ORDER BY SG.\"genreName\" " + this.sortOrderChoice;
+                                "FROM \"Song\" S, \"SongGenre\" SG, \"Genre\" G " +
+                                "WHERE S.songID = SG.\"songID\" AND SG.\"genreID\" = G.\"genreID\" " +
+                                "ORDER BY  G.name " + this.sortOrderChoice;
                         allSongsList.clear();
                         runQuery(query);
                     }

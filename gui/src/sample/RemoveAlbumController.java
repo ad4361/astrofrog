@@ -54,7 +54,7 @@ public class RemoveAlbumController implements Initializable {
     String sortOrderChoice = "ASC";
     String query = "SELECT albumID FROM \"Album\" " +
             "WHERE albumid IN (SELECT DISTINCT \"albumID\" FROM \"AlbumContains\" " +
-            "WHERE \"songID\" BETWEEN 1 AND 300) " +
+            "WHERE \"songID\" BETWEEN 1 AND 1000) " +
             "ORDER BY albumname " + this.sortOrderChoice;
 
     public void switchToPLDetailsScene(ActionEvent event) throws IOException {
@@ -67,10 +67,9 @@ public class RemoveAlbumController implements Initializable {
 
     public Album createAlbum(Integer albumID, String username) {
 
-        // get albumname TODO GENRE CHANGE
-        String getAlbumArtistGenreQuery = "SELECT A.albumname, AF.\"artistName\", AG.genre " +
-                "FROM \"Album\" A, \"AlbumFeat\" AF, \"AlbumGenre\" AG " +
-                "WHERE A.albumid = AF.albumid AND AF.albumid = AG.albumid " +
+        String getAlbumArtistGenreQuery = "SELECT A.albumname, AF.\"artistName\", G.name " +
+                "FROM \"Album\" A, \"AlbumFeat\" AF, \"AlbumGenre\" AG, \"Genre\" G " +
+                "WHERE A.albumid = AF.albumid AND AF.albumid = AG.albumid AND AG.\"genreID\" = G.\"genreID\" " +
                 "AND A.albumid = " + albumID;
         String albumname = "";
         String artistName = "";
@@ -81,7 +80,7 @@ public class RemoveAlbumController implements Initializable {
             while (albumInfo.next()) {
                 albumname = albumInfo.getString("albumname");
                 artistName = albumInfo.getString("artistName");
-                genre = albumInfo.getString("genre");
+                genre = albumInfo.getString("name");
             }
         } catch(Exception e) {
             e.printStackTrace();
@@ -152,7 +151,7 @@ public class RemoveAlbumController implements Initializable {
                     this.sortOrderChoice = sortOrderChoices[new_val.intValue()];
                     this.query = "SELECT albumID FROM \"Album\" " +
                             "WHERE albumid IN (SELECT DISTINCT \"albumID\" FROM \"AlbumContains\" " +
-                            "WHERE \"songID\" BETWEEN 1 AND 300) " +
+                            "WHERE \"songID\" BETWEEN 1 AND 1000) " +
                             "ORDER BY albumname " + this.sortOrderChoice;
                     allAlbumsList.clear();
                     runQuery(query);

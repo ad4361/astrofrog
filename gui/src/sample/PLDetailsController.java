@@ -67,7 +67,7 @@ public class PLDetailsController implements Initializable {
     String sortOrderChoice = "ASC";
     String query = "SELECT S.songid " +
             "FROM \"Song\" S, \"SongFeat\" SF " +
-            "WHERE S.songID = SF.\"songID\" AND S.songID BETWEEN 1 AND 300 " +
+            "WHERE S.songID = SF.\"songID\" " +
             "AND S.songid IN " +
             "(SELECT \"songID\" FROM \"PLContains\" " +
             "WHERE \"plNAME\" = '" + Model.PLname + "' AND \"username\" = '" +
@@ -174,9 +174,9 @@ public class PLDetailsController implements Initializable {
     public Song createSong(Integer songID, String username) {
 
         // get song title, releasedate, length, artistName, and genreName
-        String getTitleDateLengthArtistGenre = "SELECT S.title, S.releasedate, S.length, SG.\"genreName\", " +
-                "SF.artname FROM \"Song\" S, \"SongGenre\" SG, \"SongFeat\" SF " +
-                "WHERE S.songID = SG.\"songID\" AND SG.\"songID\" = SF.\"songID\" " +
+        String getTitleDateLengthArtistGenre = "SELECT S.title, S.releasedate, S.length, G.name, " +
+                "SF.artname FROM \"Song\" S, \"SongGenre\" SG, \"SongFeat\" SF, \"Genre\" G " +
+                "WHERE S.songID = SG.\"songID\" AND SG.\"songID\" = SF.\"songID\" AND SG.\"genreID\" = G.\"genreID\" " +
                 "AND S.songID = " + songID;
         String title = null;
         Date releasedate = null;
@@ -191,18 +191,16 @@ public class PLDetailsController implements Initializable {
                 title = songInfo.getString("title");
                 releasedate = songInfo.getDate("releasedate");
                 ilength = songInfo.getInt("length");
+                genreName = songInfo.getString("name");
                 artistName = songInfo.getString("artname");
-                genreName = songInfo.getString("genreName");
             }
             int minutes = ilength / 60;
-            int seconds = (int) (ilength - (minutes * 60));
-            if (seconds <= 9) {
+            int seconds = (int) (ilength -(minutes*60));
+            if(seconds <= 9){
                 length = minutes + ":0" + seconds;
-            } else {
+            } else{
                 length = minutes + ":" + seconds;
             }
-
-
         } catch (Exception e) {
             e.printStackTrace();
             try {
@@ -303,7 +301,7 @@ public class PLDetailsController implements Initializable {
                     if (this.sortChoice.equals("Song")) {
                         this.query = "SELECT S.songid " +
                                 "FROM \"Song\" S, \"SongFeat\" SF " +
-                                "WHERE S.songID = SF.\"songID\" AND S.songID BETWEEN 1 AND 300 " +
+                                "WHERE S.songID = SF.\"songID\" " +
                                 "AND S.songid IN " +
                                 "(SELECT \"songID\" FROM \"PLContains\" " +
                                 "WHERE \"plNAME\" = '" + Model.PLname + "' AND \"username\" = '" +
@@ -314,8 +312,7 @@ public class PLDetailsController implements Initializable {
                     } else if (this.sortChoice.equals("Year")) {
                         this.query = "SELECT S.songID " +
                                 "FROM \"Song\" S " +
-                                "WHERE S.songID BETWEEN 1 AND 300" +
-                                "AND S.songid IN " +
+                                "WHERE S.songid IN " +
                                 "(SELECT \"songID\" FROM \"PLContains\" " +
                                 "WHERE \"plNAME\" = '" + Model.PLname + "' AND \"username\" = '" +
                                 Model.self.getUsername() + "')" +
@@ -325,7 +322,7 @@ public class PLDetailsController implements Initializable {
                     } else if (this.sortChoice.equals("Artist")) {
                         this.query = "SELECT S.songID " +
                                 "FROM \"Song\" S, \"SongFeat\" SF " +
-                                "WHERE S.songID = SF.\"songID\" AND S.songID BETWEEN 1 AND 300" +
+                                "WHERE S.songID = SF.\"songID\" " +
                                 "AND S.songid IN " +
                                 "(SELECT \"songID\" FROM \"PLContains\" " +
                                 "WHERE \"plNAME\" = '" + Model.PLname + "' AND \"username\" = '" +
@@ -335,13 +332,13 @@ public class PLDetailsController implements Initializable {
                         runQuery(query);
                     } else if (this.sortChoice.equals("Genre")) {
                         this.query = "SELECT S.songID " +
-                                "FROM \"Song\" S, \"SongGenre\" SG " +
-                                "WHERE S.songID = SG.\"songID\" AND S.songID BETWEEN 1 AND 300" +
+                                "FROM \"Song\" S, \"SongGenre\" SG, \"Genre\" G " +
+                                "WHERE S.songID = SG.\"songID\" AND SG.\"genreID\" = G.\"genreID\" " +
                                 "AND S.songid IN " +
                                 "(SELECT \"songID\" FROM \"PLContains\" " +
                                 "WHERE \"plNAME\" = '" + Model.PLname + "' AND \"username\" = '" +
                                 Model.self.getUsername() + "')" +
-                                "ORDER BY  SG.\"genreName\" " + this.sortOrderChoice;
+                                "ORDER BY  G.name " + this.sortOrderChoice;
                         allSongsList.clear();
                         runQuery(query);
                     }
@@ -356,7 +353,7 @@ public class PLDetailsController implements Initializable {
                     if (this.sortChoice.equals("Song")) {
                         this.query = "SELECT S.songid " +
                                 "FROM \"Song\" S, \"SongFeat\" SF " +
-                                "WHERE S.songID = SF.\"songID\" AND S.songID BETWEEN 1 AND 300 " +
+                                "WHERE S.songID = SF.\"songID\" " +
                                 "AND S.songid IN " +
                                 "(SELECT \"songID\" FROM \"PLContains\" " +
                                 "WHERE \"plNAME\" = '" + Model.PLname + "' AND \"username\" = '" +
@@ -388,13 +385,13 @@ public class PLDetailsController implements Initializable {
                         runQuery(query);
                     } else if (this.sortChoice.equals("Genre")) {
                         this.query = "SELECT S.songID " +
-                                "FROM \"Song\" S, \"SongGenre\" SG " +
-                                "WHERE S.songID = SG.\"songID\" AND S.songID BETWEEN 1 AND 300" +
+                                "FROM \"Song\" S, \"SongGenre\" SG, \"Genre\" G " +
+                                "WHERE S.songID = SG.\"songID\" AND SG.\"genreID\" = G.\"genreID\" " +
                                 "AND S.songid IN " +
                                 "(SELECT \"songID\" FROM \"PLContains\" " +
                                 "WHERE \"plNAME\" = '" + Model.PLname + "' AND \"username\" = '" +
                                 Model.self.getUsername() + "')" +
-                                "ORDER BY  SG.\"genreName\" " + this.sortOrderChoice;
+                                "ORDER BY  G.name " + this.sortOrderChoice;
                         allSongsList.clear();
                         runQuery(query);
                     }
