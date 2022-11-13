@@ -69,6 +69,14 @@ public class ProfilePageController implements Initializable {
         stage.show();
     }
 
+    public void switchToForYouScene(ActionEvent event) throws IOException {
+        root = FXMLLoader.load(getClass().getResource("ForYou.fxml"));
+        stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        scene = new Scene(root);
+        stage.setScene(scene);
+        stage.show();
+    }
+
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {

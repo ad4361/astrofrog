@@ -40,7 +40,7 @@
             <Font size="20.0" />
          </font>
       </Label>
-      <Button layoutX="501.0" layoutY="346.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="69.0" text="For you" />
+      <Button layoutX="501.0" layoutY="346.0" mnemonicParsing="false" onAction="#switchToForYouScene" prefHeight="25.0" prefWidth="69.0" text="For you" />
       <Label layoutX="263.0" layoutY="350.0" prefHeight="17.0" prefWidth="237.0" text="Find music tailored to your listening habits:" />
       <ListView fx:id="top10ListView" layoutX="26.0" layoutY="223.0" prefHeight="96.0" prefWidth="547.0" />
    </children>
