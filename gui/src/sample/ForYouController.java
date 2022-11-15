@@ -10,6 +10,7 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.ListView;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -28,10 +29,9 @@ public class ForYouController implements Initializable {
     private Parent root;
 
     @FXML
-    TableView<Song> topGenresTableView;
-    @FXML
-    TableColumn<Song, String> genreTableColumn;
+    ListView<String> genreListView;
 
+    /** */
     @FXML
     TableView<Song> top50TableView;
     @FXML
@@ -44,6 +44,8 @@ public class ForYouController implements Initializable {
     TableColumn<Song, Integer> listensColumn1;
     @FXML
     TableColumn<Song, String> playColumn1;
+
+    ObservableList<Song> top50List = FXCollections.observableArrayList();
 
     /** */
     @FXML
@@ -75,6 +77,7 @@ public class ForYouController implements Initializable {
     @FXML
     TableColumn<Song, String> playColumn3;
 
+    ObservableList<Song> playHistoryList = FXCollections.observableArrayList();
 
 
     public void switchToProfileScene(ActionEvent event) throws IOException {
@@ -154,6 +157,35 @@ public class ForYouController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+
+        // top 5 genres of the month
+        String top5GenresQuery = "SELECT ETC.name, COUNT(*) FROM " +
+                "(SELECT US.\"songID\", G.name " +
+                "FROM \"UserSong\" US, \"SongGenre\" SG, \"Genre\" G " +
+                "WHERE EXTRACT(YEAR FROM \"timeListened\") = EXTRACT(YEAR FROM now()) " +
+                "AND EXTRACT(MONTH FROM \"timeListened\") = EXTRACT(MONTH FROM now()) " +
+                "AND US.\"songID\" = SG.\"songID\" AND SG.\"genreID\" = G.\"genreID\") AS ETC " +
+                "GROUP BY 1 " +
+                "ORDER BY 2 DESC " +
+                "LIMIT 5";
+        try {
+            PreparedStatement stmtGenre = PostgresSSH.connection.prepareStatement(top5GenresQuery);
+            ResultSet rsTop5Genre = stmtGenre.executeQuery();
+            int i = 1;
+            while (rsTop5Genre.next()) {
+                String genreName = rsTop5Genre.getString(1);
+                genreListView.getItems().add(i + ". " + genreName);
+                i++;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            try {
+                PostgresSSH.connection.close();
+            } catch (SQLException throwables) {
+                throwables.printStackTrace();
+            }
+        }
+
 
         // top 50 songs among friends: 2
         songColumn2.setCellValueFactory(new PropertyValueFactory<>("title"));
