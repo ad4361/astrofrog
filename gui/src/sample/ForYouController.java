@@ -186,6 +186,39 @@ public class ForYouController implements Initializable {
             }
         }
 
+        // top 50 songs of the last 30 days
+        songColumn1.setCellValueFactory(new PropertyValueFactory<>("title"));
+        artistColumn1.setCellValueFactory(new PropertyValueFactory<>("artistName"));
+        listensColumn1.setCellValueFactory(new PropertyValueFactory<>("listenCount"));
+        genreColumn1.setCellValueFactory(new PropertyValueFactory<>("genreName"));
+        playColumn1.setCellValueFactory(new PropertyValueFactory<>("button"));
+
+        String last30DaysQuery = "SELECT \"songID\", COUNT(*) " +
+                "FROM \"UserSong\" " +
+                "WHERE \"timeListened\" > now() - interval '30 day' " +
+                "GROUP BY 1 " +
+                "ORDER BY 2 DESC " +
+                "LIMIT 50";
+        try {
+            PreparedStatement stmt1 = PostgresSSH.connection.prepareStatement(last30DaysQuery);
+            ResultSet rs30Days = stmt1.executeQuery();
+            while (rs30Days.next()) {
+                Integer songID = rs30Days.getInt("songID");
+                Song song = createSong(songID, Model.self.getUsername());
+                top50List.add(song);
+            }
+            top50TableView.setItems(top50List);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            try {
+                PostgresSSH.connection.close();
+            } catch (SQLException throwables) {
+                throwables.printStackTrace();
+            }
+        }
+
+
 
         // top 50 songs among friends: 2
         songColumn2.setCellValueFactory(new PropertyValueFactory<>("title"));
