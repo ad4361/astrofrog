@@ -31,6 +31,16 @@ public class Song {
         this.button = button;
     }
 
+    public Song(int songID, String title, String artistName, int listenCount, String genreName,
+                Button button) {
+        this.songID = songID;
+        this.title = title;
+        this.artistName = artistName;
+        this.listenCount = listenCount;
+        this.genreName = genreName;
+        this.button = button;
+    }
+
     public int getSongID() {
         return this.songID;
     }
