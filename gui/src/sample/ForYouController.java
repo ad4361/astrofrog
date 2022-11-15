@@ -186,7 +186,7 @@ public class ForYouController implements Initializable {
             }
         }
 
-        // top 50 songs of the last 30 days
+        // top 50 songs of the last 30 days : 1
         songColumn1.setCellValueFactory(new PropertyValueFactory<>("title"));
         artistColumn1.setCellValueFactory(new PropertyValueFactory<>("artistName"));
         listensColumn1.setCellValueFactory(new PropertyValueFactory<>("listenCount"));
@@ -219,7 +219,6 @@ public class ForYouController implements Initializable {
         }
 
 
-
         // top 50 songs among friends: 2
         songColumn2.setCellValueFactory(new PropertyValueFactory<>("title"));
         artistColumn2.setCellValueFactory(new PropertyValueFactory<>("artistName"));
@@ -244,6 +243,65 @@ public class ForYouController implements Initializable {
                 friendSongsList.add(song);
             }
             friendSongsTableView.setItems(friendSongsList);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            try {
+                PostgresSSH.connection.close();
+            } catch (SQLException throwables) {
+                throwables.printStackTrace();
+            }
+        }
+
+        // song recs based on play history and similar users
+        songColumn3.setCellValueFactory(new PropertyValueFactory<>("title"));
+        artistColumn3.setCellValueFactory(new PropertyValueFactory<>("artistName"));
+        listensColumn3.setCellValueFactory(new PropertyValueFactory<>("listenCount"));
+        genreColumn3.setCellValueFactory(new PropertyValueFactory<>("genreName"));
+        playColumn3.setCellValueFactory(new PropertyValueFactory<>("button"));
+
+        String playHistoryQuery = "SELECT BIGETC.\"songID\" FROM " +
+                "((SELECT \"songID\" FROM \"SongGenre\" " +
+                "WHERE \"genreID\" IN (SELECT GENRES.\"genreID\" FROM " +
+                "(SELECT ETC.\"genreID\", COUNT(*) FROM " +
+                "(SELECT US.\"songID\", G.\"genreID\" " +
+                "FROM \"UserSong\" US, \"SongGenre\" SG, \"Genre\" G " +
+                "WHERE US.username = ? " +
+                "AND US.\"songID\" = SG.\"songID\" AND SG.\"genreID\" = G.\"genreID\") AS ETC " +
+                "GROUP BY 1 " +
+                "ORDER BY 2 DESC " +
+                "LIMIT 6) " +
+                "AS GENRES)) " +
+                "UNION " +
+                "(SELECT \"songID\" FROM \"SongFeat\" " +
+                "WHERE artname = ? OR artname = ? OR artname = ?) " +
+                "UNION " +
+                "(SELECT DISTINCT \"songID\" FROM \"UserSong\" " +
+                "WHERE username IN (SELECT DISTINCT sIo.other FROM (SELECT sImo.other AS other " +
+                "FROM (SELECT DISTINCT ME.\"songID\", ME.username AS me, OTHER.username AS other " +
+                "FROM \"UserSong\" ME,  \"UserSong\" OTHER " +
+                "WHERE ME.\"songID\" = OTHER.\"songID\" " +
+                "AND ME.username != OTHER.username " +
+                "AND ME.username = ? " +
+                "ORDER BY 3) as sImo " +
+                "ORDER BY random() " +
+                "LIMIT 5) AS sIo))) AS BIGETC " +
+                "ORDER BY random() " +
+                "LIMIT 40";
+        try {
+            PreparedStatement stmt3 = PostgresSSH.connection.prepareStatement(playHistoryQuery);
+            stmt3.setString(1, Model.self.getUsername());
+            stmt3.setString(2, Model.top3Artists.get(0));
+            stmt3.setString(3, Model.top3Artists.get(1));
+            stmt3.setString(4, Model.top3Artists.get(2));
+            stmt3.setString(5, Model.self.getUsername());
+            ResultSet rsRecSongs = stmt3.executeQuery();
+            while (rsRecSongs.next()) {
+                Integer songID = rsRecSongs.getInt("songID");
+                Song song = createSong(songID, Model.self.getUsername());
+                playHistoryList.add(song);
+            }
+            playHistoryTableView.setItems(playHistoryList);
 
         } catch (Exception e) {
             e.printStackTrace();

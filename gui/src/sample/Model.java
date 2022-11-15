@@ -1,12 +1,12 @@
 package sample;
 
-import java.sql.Connection;
-import java.sql.SQLException;
+import java.util.ArrayList;
 
 public class Model {
 
     public static User self;
     public static String PLname;
+    public static ArrayList<String> top3Artists;
 
     public static void setSelf(User user) {
         self = user;
@@ -24,4 +24,7 @@ public class Model {
         PLname = null;
     }
 
+    public static void setTop3Artists(ArrayList<String> top3ArtistsList) {
+        top3Artists = top3ArtistsList;
+    }
 }

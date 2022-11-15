@@ -16,6 +16,7 @@ import java.net.URL;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.ResourceBundle;
 
 public class ProfilePageController implements Initializable {
@@ -34,8 +35,6 @@ public class ProfilePageController implements Initializable {
     private Label followingLabel;
     @FXML
     private ListView<String> top10ListView;
-
-
 
     public void switchToFollowersScene(ActionEvent event) throws IOException {
         root = FXMLLoader.load(getClass().getResource("Followers.fxml"));
@@ -125,6 +124,11 @@ public class ProfilePageController implements Initializable {
         }
 
         // find top 10 artists
+        ArrayList<String> top3ArtistsList = new ArrayList<>();
+        top3ArtistsList.add("");
+        top3ArtistsList.add("");
+        top3ArtistsList.add("");
+
         String top10Query = "SELECT BIGETC.artname, SUM(BIGETC.sum) " +
                 "FROM " +
                     "(SELECT SF.artname, ETC.sum " +
@@ -155,8 +159,13 @@ public class ProfilePageController implements Initializable {
             while (rsTop10.next()) {
                 String artistName = rsTop10.getString(1);
                 top10ListView.getItems().add(i + ". " + artistName);
+                if (i < 4) {
+                    //top3ArtistsList.add(artistName);
+                    top3ArtistsList.set(i-1, artistName);
+                }
                 i++;
             }
+            Model.setTop3Artists(top3ArtistsList);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -166,6 +175,5 @@ public class ProfilePageController implements Initializable {
                 throwables.printStackTrace();
             }
         }
-
     }
 }
